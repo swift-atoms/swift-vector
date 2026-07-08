@@ -19,7 +19,7 @@ extension Vector {
         var base: Vector<Bound>
 
         @inlinable
-        init(_ base: Vector<Bound>) {
+        package init(_ base: Vector<Bound>) {
             self.base = base
         }
     }

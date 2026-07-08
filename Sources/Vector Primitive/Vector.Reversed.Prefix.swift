@@ -19,7 +19,7 @@ extension Vector.Reversed {
         var base: Vector<Bound>.Reversed
 
         @inlinable
-        init(_ base: Vector<Bound>.Reversed) {
+        package init(_ base: Vector<Bound>.Reversed) {
             self.base = base
         }
     }

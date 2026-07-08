@@ -151,7 +151,7 @@ public struct Vector<Bound: ~Copyable> {
         let transform: @Sendable (Index) -> Bound
 
         @inlinable
-        init(current: Index, end: Index, transform: @escaping @Sendable (Index) -> Bound) {
+        package init(current: Index, end: Index, transform: @escaping @Sendable (Index) -> Bound) {
             self.current = current
             self.end = end
             self.transform = transform
@@ -215,7 +215,7 @@ public struct Vector<Bound: ~Copyable> {
             var exhausted: Bool
 
             @inlinable
-            init(start: Index, end: Index, transform: @escaping @Sendable (Index) -> Bound) {
+            package init(start: Index, end: Index, transform: @escaping @Sendable (Index) -> Bound) {
                 self.start = start
                 self.transform = transform
 
@@ -304,7 +304,7 @@ public struct Vector<Bound: ~Copyable> {
         // MARK: Internal Iteration
 
         @inlinable
-        mutating func _borrowingForEach<E: Swift.Error>(_ body: (borrowing Bound) throws(E) -> Void) throws(E) {
+        package mutating func _borrowingForEach<E: Swift.Error>(_ body: (borrowing Bound) throws(E) -> Void) throws(E) {
             guard !isEmpty else { return }
             // SAFETY: `!isEmpty` proves `end > start >= .zero`, so
             // `end.predecessor.exact()` cannot underflow. `do/catch` with
@@ -332,7 +332,7 @@ public struct Vector<Bound: ~Copyable> {
         }
 
         @inlinable
-        mutating func _consumingDrain(_ body: (consuming Bound) -> Void) {
+        package mutating func _consumingDrain(_ body: (consuming Bound) -> Void) {
             guard !isEmpty else { return }
             // SAFETY: `!isEmpty` proves `end > start >= .zero`, so
             // `end.predecessor.exact()` cannot underflow. `do/catch` with
@@ -468,7 +468,7 @@ public struct Vector<Bound: ~Copyable> {
     // MARK: - Internal Iteration
 
     @inlinable
-    mutating func _borrowingForEach<E: Swift.Error>(_ body: (borrowing Bound) throws(E) -> Void) throws(E) {
+    package mutating func _borrowingForEach<E: Swift.Error>(_ body: (borrowing Bound) throws(E) -> Void) throws(E) {
         var i = start
         while i < end {
             let bound = transform(i)
@@ -480,7 +480,7 @@ public struct Vector<Bound: ~Copyable> {
     }
 
     @inlinable
-    mutating func _consumingDrain(_ body: (consuming Bound) -> Void) {
+    package mutating func _consumingDrain(_ body: (consuming Bound) -> Void) {
         var i = start
         while i < end {
             body(transform(i))

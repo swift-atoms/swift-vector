@@ -18,7 +18,7 @@ import Vector_Primitives_Test_Support
 
 enum VectorTests {
     @Suite struct Unit {}
-    @Suite struct EdgeCase {}
+    @Suite struct `Edge Case` {}
     @Suite struct Performance {}
 }
 
@@ -166,7 +166,7 @@ extension VectorTests.Unit {
 
 // MARK: - Edge Case Tests
 
-extension VectorTests.EdgeCase {
+extension VectorTests.`Edge Case` {
 
     @Test
     func `empty vector forEach does nothing`() throws(VectorTestError) {
@@ -230,7 +230,7 @@ extension VectorTests.EdgeCase {
 
 enum VectorReversedTests {
     @Suite struct Unit {}
-    @Suite struct EdgeCase {}
+    @Suite struct `Edge Case` {}
 }
 
 extension VectorReversedTests.Unit {
@@ -295,7 +295,7 @@ extension VectorReversedTests.Unit {
     }
 }
 
-extension VectorReversedTests.EdgeCase {
+extension VectorReversedTests.`Edge Case` {
 
     @Test
     func `empty reversed vector works`() throws(VectorTestError) {
@@ -1211,7 +1211,7 @@ extension VectorDropPrefixInvariantTests.Invariants {
 
 enum VectorCardinalDistanceTests {
     @Suite struct Invariants {}
-    @Suite struct LargeVectors {}
+    @Suite struct `Large Vectors` {}
 }
 
 extension VectorCardinalDistanceTests.Invariants {
@@ -1285,7 +1285,7 @@ extension VectorCardinalDistanceTests.Invariants {
     }
 }
 
-extension VectorCardinalDistanceTests.LargeVectors {
+extension VectorCardinalDistanceTests.`Large Vectors` {
 
     @Test
     func `INVARIANT: vectors exceeding Int.max distance work`() {
