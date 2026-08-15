@@ -39,7 +39,12 @@ extension Vector.Reversed.Prefix where Bound: Copyable {
     @inlinable
     public consuming func first(_ count: Vector<Bound>.Index.Count) -> Vector<Bound>.Reversed {
         let newStart = base.end.retreat.clamped(by: count, to: base.start)
-        return Vector<Bound>.Reversed(__unchecked: (), start: newStart, end: base.end, transform: base.transform)
+        return Vector<Bound>.Reversed(
+            __unchecked: (),
+            start: newStart,
+            end: base.end,
+            transform: base.transform
+        )
     }
 
     /// Takes elements while predicate is true via `.prefix.while { }` in O(n).

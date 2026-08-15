@@ -215,7 +215,8 @@ public struct Vector<Bound: ~Copyable> {
             var exhausted: Bool
 
             @inlinable
-            package init(start: Index, end: Index, transform: @escaping @Sendable (Index) -> Bound) {
+            package init(start: Index, end: Index, transform: @escaping @Sendable (Index) -> Bound)
+            {
                 self.start = start
                 self.transform = transform
 
@@ -276,7 +277,12 @@ public struct Vector<Bound: ~Copyable> {
         }
 
         @usableFromInline
-        init(__unchecked: Void, start: Index, end: Index, transform: @escaping @Sendable (Index) -> Bound) {
+        init(
+            __unchecked: Void,
+            start: Index,
+            end: Index,
+            transform: @escaping @Sendable (Index) -> Bound
+        ) {
             self.start = start
             self.end = end
             // SAFETY: `__unchecked` caller guarantees `end >= start`, so
@@ -304,7 +310,9 @@ public struct Vector<Bound: ~Copyable> {
         // MARK: Internal Iteration
 
         @inlinable
-        package mutating func _borrowingForEach<E: Swift.Error>(_ body: (borrowing Bound) throws(E) -> Void) throws(E) {
+        package mutating func _borrowingForEach<E: Swift.Error>(
+            _ body: (borrowing Bound) throws(E) -> Void
+        ) throws(E) {
             guard !isEmpty else { return }
             // SAFETY: `!isEmpty` proves `end > start >= .zero`, so
             // `end.predecessor.exact()` cannot underflow. `do/catch` with
@@ -468,7 +476,9 @@ public struct Vector<Bound: ~Copyable> {
     // MARK: - Internal Iteration
 
     @inlinable
-    package mutating func _borrowingForEach<E: Swift.Error>(_ body: (borrowing Bound) throws(E) -> Void) throws(E) {
+    package mutating func _borrowingForEach<E: Swift.Error>(
+        _ body: (borrowing Bound) throws(E) -> Void
+    ) throws(E) {
         var i = start
         while i < end {
             let bound = transform(i)

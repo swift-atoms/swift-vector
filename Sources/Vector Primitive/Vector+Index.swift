@@ -59,7 +59,8 @@ extension Vector {
     ///
     /// - Precondition: `offset >= 0 && offset < count`
     @inlinable
-    public subscript<Tag: ~Copyable & ~Escapable>(offset: Index_Primitives.Index<Tag>.Offset) -> Index_Primitives.Index<Tag>
+    public subscript<Tag: ~Copyable & ~Escapable>(offset: Index_Primitives.Index<Tag>.Offset)
+        -> Index_Primitives.Index<Tag>
     where Bound == Index_Primitives.Index<Tag> {
         let vectorOffset: Vector<Bound>.Index.Offset = offset.retag()
         precondition(vectorOffset < count, "Offset out of bounds")
@@ -84,7 +85,8 @@ extension Vector.Reversed {
     /// - Important: This regenerates the value; no caching occurs.
     /// - Precondition: `offset >= 0 && offset < count`
     @inlinable
-    public subscript<Tag: ~Copyable & ~Escapable>(offset: Index_Primitives.Index<Tag>.Offset) -> Index_Primitives.Index<Tag>
+    public subscript<Tag: ~Copyable & ~Escapable>(offset: Index_Primitives.Index<Tag>.Offset)
+        -> Index_Primitives.Index<Tag>
     where Bound == Index_Primitives.Index<Tag> {
         let vectorOffset: Vector<Bound>.Index.Offset = offset.retag()
         precondition(vectorOffset < count, "Offset out of bounds")
