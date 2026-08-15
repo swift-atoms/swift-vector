@@ -39,7 +39,12 @@ extension Vector.Reversed.Drop where Bound: Copyable {
     @inlinable
     public consuming func first(_ count: Vector<Bound>.Index.Count) -> Vector<Bound>.Reversed {
         let newEnd = base.end.retreat.clamped(by: count, to: base.start)
-        return Vector<Bound>.Reversed(__unchecked: (), start: base.start, end: newEnd, transform: base.transform)
+        return Vector<Bound>.Reversed(
+            __unchecked: (),
+            start: base.start,
+            end: newEnd,
+            transform: base.transform
+        )
     }
 
     /// Skips elements while predicate is true via `.drop.while { }` in O(n).

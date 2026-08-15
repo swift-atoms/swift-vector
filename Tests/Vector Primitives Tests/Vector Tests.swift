@@ -347,7 +347,9 @@ extension VectorInvariantTests.Iterator {
     }
 
     @Test
-    func `INVARIANT: Reversed iterator returns nil forever after exhaustion`() throws(VectorTestError) {
+    func `INVARIANT: Reversed iterator returns nil forever after exhaustion`()
+        throws(VectorTestError)
+    {
         let vector = try Vector(0..<3) { $0 }
         var iterator: Vector<Int>.Reversed.Iterator = vector.reversed().makeIterator()
 
@@ -391,7 +393,8 @@ extension VectorInvariantTests.Iterator {
     }
 
     @Test
-    func `INVARIANT: Reversed iterator count matches vector.count exactly`() throws(VectorTestError) {
+    func `INVARIANT: Reversed iterator count matches vector.count exactly`() throws(VectorTestError)
+    {
         for size in [0, 1, 2, 10, 100, 1000] {
             let vector = try Vector(0..<size) { $0 }
             var iterator: Vector<Int>.Reversed.Iterator = vector.reversed().makeIterator()
@@ -459,7 +462,9 @@ extension VectorInvariantTests.Consistency {
     }
 
     @Test
-    func `INVARIANT: satisfies.all(p) implies satisfies.any(p) for non-empty`() throws(VectorTestError) {
+    func `INVARIANT: satisfies.all(p) implies satisfies.any(p) for non-empty`()
+        throws(VectorTestError)
+    {
         for size in [1, 5, 20] {
             var vector1 = try Vector(0..<size) { $0 }
             var vector2 = try Vector(0..<size) { $0 }
@@ -501,21 +506,27 @@ extension VectorInvariantTests.Consistency {
     }
 
     @Test
-    func `INVARIANT: reduce.into(initial) { } returns initial for empty vector`() throws(VectorTestError) {
+    func `INVARIANT: reduce.into(initial) { } returns initial for empty vector`()
+        throws(VectorTestError)
+    {
         var vector = try Vector(0..<0) { $0 }
         let result = vector.reduce.into(42) { acc, _ in acc += 1 }
         #expect(result == 42)
     }
 
     @Test
-    func `INVARIANT: reduce.from(initial) { } returns initial for empty vector`() throws(VectorTestError) {
+    func `INVARIANT: reduce.from(initial) { } returns initial for empty vector`()
+        throws(VectorTestError)
+    {
         var vector = try Vector(0..<0) { $0 }
         let result = vector.reduce.from(42) { _, _ in 0 }
         #expect(result == 42)
     }
 
     @Test
-    func `INVARIANT: Transform is deterministic - same index gives same value`() throws(VectorTestError) {
+    func `INVARIANT: Transform is deterministic - same index gives same value`()
+        throws(VectorTestError)
+    {
         let vector = try Vector(0..<5) { i in
             i * 7 + 3
         }
@@ -1109,7 +1120,9 @@ enum VectorDropPrefixInvariantTests {
 extension VectorDropPrefixInvariantTests.Invariants {
 
     @Test
-    func `INVARIANT: drop.first(n) + prefix.first(m) maintains correct total`() throws(VectorTestError) {
+    func `INVARIANT: drop.first(n) + prefix.first(m) maintains correct total`()
+        throws(VectorTestError)
+    {
         let sizes: [Vector<UInt>.Index.Count] = [0, 1, 5, 20, 100]
 
         for size in sizes {
@@ -1222,7 +1235,10 @@ extension VectorCardinalDistanceTests.Invariants {
         (50, 150),  // offset vector
         (1000, 1000),  // empty at offset
     ])
-    func `INVARIANT: count equals cardinal distance between positions`(start: Vector<UInt>.Index, end: Vector<UInt>.Index) throws(Vector<UInt>.Error) {
+    func `INVARIANT: count equals cardinal distance between positions`(
+        start: Vector<UInt>.Index,
+        end: Vector<UInt>.Index
+    ) throws(Vector<UInt>.Error) {
         // SAFETY: test fixtures guarantee end >= start, so `.unchecked(to:)`
         // is the proven-monotonic call site per ordinal-primitives' docs.
         let cardinalDistance = start.position.distance.unchecked(to: end.position)
@@ -1240,7 +1256,10 @@ extension VectorCardinalDistanceTests.Invariants {
         (100, 100),
         (100, 105),
     ])
-    func `INVARIANT: count matches iteration count exactly`(start: Vector<UInt>.Index, end: Vector<UInt>.Index) throws(Vector<UInt>.Error) {
+    func `INVARIANT: count matches iteration count exactly`(
+        start: Vector<UInt>.Index,
+        end: Vector<UInt>.Index
+    ) throws(Vector<UInt>.Error) {
         let vector = try Vector(start: start, end: end)
 
         var iterationCount: Vector<UInt>.Index.Count = 0

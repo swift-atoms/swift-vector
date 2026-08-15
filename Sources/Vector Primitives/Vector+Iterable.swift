@@ -35,9 +35,11 @@ public import Vector_Primitive
 // these conformances bind the iterators to the foundation `Iterator.`Protocol``
 // and to `Swift.IteratorProtocol` so they vend through both surfaces.
 
-extension Vector.Iterator: Iterator_Primitive.Iterator.`Protocol`, IteratorProtocol where Bound: Copyable {}
+extension Vector.Iterator: Iterator_Primitive.Iterator.`Protocol`, IteratorProtocol
+where Bound: Copyable {}
 
-extension Vector.Reversed.Iterator: Iterator_Primitive.Iterator.`Protocol`, IteratorProtocol where Bound: Copyable {}
+extension Vector.Reversed.Iterator: Iterator_Primitive.Iterator.`Protocol`, IteratorProtocol
+where Bound: Copyable {}
 
 // MARK: - Shared borrowing makeIterator (satisfies Iterable AND Sequenceable)
 
