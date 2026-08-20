@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 public import Index_Primitives
-public import Property_Primitives
+import Property_Primitives
 
 /// A functional vector that generates `~Copyable` values on demand from a finite integer domain.
 ///
