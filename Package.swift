@@ -12,15 +12,12 @@ let package = Package(
         .visionOS(.v27),
     ],
     products: [
-        // MARK: - Type module (lean ~Copyable `Vector` type + structural surface;
-        //         Copyable-imposing Sequence/Iterator conformances live in the
-        //         plural ops module per [MOD-004]/[MOD-036]).
+
         .library(
             name: "Vector Primitive",
             targets: ["Vector Primitive"]
         ),
-        // MARK: - Ops module + [MOD-005] umbrella (owns the Sequence/Iterator
-        //         conformances; re-exports the lean type root + SLI).
+
         .library(
             name: "Vector Primitives",
             targets: ["Vector Primitives"]
@@ -53,10 +50,7 @@ let package = Package(
         ),
     ],
     targets: [
-        // MARK: - Type module — lean `Vector` type + structural index/range surface
-        //         + Property.Inout forEach/drain accessors. No Sequence/Iterator
-        //         conformances (those impose Copyable per [MOD-004]); drops the
-        //         Sequence Primitives dep accordingly.
+
         .target(
             name: "Vector Primitive",
             dependencies: [
@@ -64,18 +58,14 @@ let package = Package(
                 .product(name: "Property Primitives", package: "swift-property-primitives"),
             ]
         ),
-        // MARK: - Standard Library Integration — UnsafePointer + Index extensions
-        //         (genuine stdlib interop; re-exports the lean type root).
+
         .target(
             name: "Vector Primitives Standard Library Integration",
             dependencies: [
                 "Vector Primitive"
             ]
         ),
-        // MARK: - Ops module + umbrella — owns the Sequence/Iterator conformances
-        //         ([MOD-004] constraint isolation); re-exports the lean type root
-        //         and SLI per [MOD-005]. Consumers that iterate a `Vector` import
-        //         this plural module (SE-0444 MemberImportVisibility).
+
         .target(
             name: "Vector Primitives",
             dependencies: [

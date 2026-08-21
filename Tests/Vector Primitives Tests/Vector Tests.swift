@@ -1,28 +1,13 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-primitives open source project
-//
-// Copyright (c) 2024-2026 Coen ten Thije Boonkkamp and the swift-primitives project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import Testing
 import Vector_Primitives_Test_Support
 
 @testable import Vector_Primitives
-
-// MARK: - Test Structure
 
 enum VectorTests {
     @Suite struct Unit {}
     @Suite struct `Edge Case` {}
     @Suite struct Performance {}
 }
-
-// MARK: - Unit Tests
 
 extension VectorTests.Unit {
 
@@ -77,8 +62,6 @@ extension VectorTests.Unit {
         reversed.forEach { results.append($0) }
         #expect(results == [4, 3, 2, 1, 0])
     }
-
-    // MARK: - Sequence.Protocol Conformance Tests
 
     @Test
     func `satisfies.all returns true when all match`() throws(VectorTestError) {
@@ -164,8 +147,6 @@ extension VectorTests.Unit {
     }
 }
 
-// MARK: - Edge Case Tests
-
 extension VectorTests.`Edge Case` {
 
     @Test
@@ -225,8 +206,6 @@ extension VectorTests.`Edge Case` {
         #expect(results == [0, -1, -2, -3, -4])
     }
 }
-
-// MARK: - Reversed Tests
 
 enum VectorReversedTests {
     @Suite struct Unit {}
@@ -316,8 +295,6 @@ extension VectorReversedTests.`Edge Case` {
     }
 }
 
-// MARK: - Invariant Tests (Brutal)
-
 enum VectorInvariantTests {
     @Suite struct Iterator {}
     @Suite struct Consistency {}
@@ -326,8 +303,6 @@ enum VectorInvariantTests {
     @Suite struct Boundaries {}
 }
 
-// MARK: - Iterator Invariants
-
 extension VectorInvariantTests.Iterator {
 
     @Test
@@ -335,12 +310,10 @@ extension VectorInvariantTests.Iterator {
         let vector = try Vector(0..<3) { $0 }
         var iterator: Vector<Int>.Iterator = vector.makeIterator()
 
-        // Exhaust the iterator
         _ = iterator.next()
         _ = iterator.next()
         _ = iterator.next()
 
-        // Must return nil forever
         for _ in 0..<100 {
             #expect(iterator.next() == nil)
         }
@@ -353,12 +326,10 @@ extension VectorInvariantTests.Iterator {
         let vector = try Vector(0..<3) { $0 }
         var iterator: Vector<Int>.Reversed.Iterator = vector.reversed().makeIterator()
 
-        // Exhaust
         _ = iterator.next()
         _ = iterator.next()
         _ = iterator.next()
 
-        // Must return nil forever
         for _ in 0..<100 {
             #expect(iterator.next() == nil)
         }
@@ -412,8 +383,6 @@ extension VectorInvariantTests.Iterator {
     }
 }
 
-// MARK: - Consistency Invariants
-
 extension VectorInvariantTests.Consistency {
 
     @Test
@@ -422,7 +391,6 @@ extension VectorInvariantTests.Consistency {
             var vector1 = try Vector(0..<size) { $0 }
             var vector2 = try Vector(0..<size) { $0 }
 
-            // Test with predicate that matches
             let containsEven = vector1.contains { $0 % 2 == 0 }
             let firstEven = vector2.first { $0 % 2 == 0 }
             #expect(
@@ -430,7 +398,6 @@ extension VectorInvariantTests.Consistency {
                 "Size \(size): contains(even) = \(containsEven), first != nil = \(firstEven != nil)"
             )
 
-            // Test with predicate that never matches
             var vector3 = try Vector(0..<size) { $0 }
             var vector4 = try Vector(0..<size) { $0 }
             let containsNegative = vector3.contains { $0 < 0 }
@@ -442,7 +409,7 @@ extension VectorInvariantTests.Consistency {
     @Test
     func `INVARIANT: satisfies.any(p) == !satisfies.none(p)`() throws(VectorTestError) {
         for size in [0, 1, 5, 20] {
-            // Predicate that matches some elements
+
             var vector1 = try Vector(0..<size) { $0 }
             var vector2 = try Vector(0..<size) { $0 }
             let anyEven = vector1.satisfies.any { $0 % 2 == 0 }
@@ -452,7 +419,6 @@ extension VectorInvariantTests.Consistency {
                 "Size \(size): any(even) = \(anyEven), none(even) = \(noneEven)"
             )
 
-            // Predicate that matches no elements
             var vector3 = try Vector(0..<size) { $0 }
             var vector4 = try Vector(0..<size) { $0 }
             let anyNegative = vector3.satisfies.any { $0 < 0 }
@@ -531,7 +497,6 @@ extension VectorInvariantTests.Consistency {
             i * 7 + 3
         }
 
-        // Iterate multiple times and verify same values
         var results1: [Int] = []
         var results2: [Int] = []
 
@@ -545,8 +510,6 @@ extension VectorInvariantTests.Consistency {
         #expect(results1 == [3, 10, 17, 24, 31])
     }
 }
-
-// MARK: - Drain Invariants
 
 extension VectorInvariantTests.Drain {
 
@@ -597,8 +560,6 @@ extension VectorInvariantTests.Drain {
         #expect(reversed.isEmpty)
     }
 }
-
-// MARK: - Symmetry Invariants
 
 extension VectorInvariantTests.Symmetry {
 
@@ -673,8 +634,6 @@ extension VectorInvariantTests.Symmetry {
     }
 }
 
-// MARK: - Boundary Invariants
-
 extension VectorInvariantTests.Boundaries {
 
     @Test
@@ -702,7 +661,7 @@ extension VectorInvariantTests.Boundaries {
 
     @Test
     func `INVARIANT: Transform with overflow-safe arithmetic`() throws(VectorTestError) {
-        // Use transforms that don't overflow
+
         let vector = try Vector(0..<5) { Int.max - 10 + $0 }
         var results: [Int] = []
         var iter: Vector<Int>.Iterator = vector.makeIterator()
@@ -727,7 +686,7 @@ extension VectorInvariantTests.Boundaries {
 
     @Test
     func `INVARIANT: Complex transform maintains invariants`() throws(VectorTestError) {
-        // Transform: triangular numbers
+
         let vector = try Vector(1..<6) { n in n * (n + 1) / 2 }
 
         var results: [Int] = []
@@ -753,8 +712,6 @@ extension VectorInvariantTests.Boundaries {
         #expect(result == 49, "reversed first should return 49 (last element < 50)")
     }
 }
-
-// MARK: - Stress Tests
 
 enum VectorStressTests {
     @Suite struct Stress {}
@@ -808,30 +765,26 @@ extension VectorStressTests.Stress {
             var vector2 = try Vector(0..<size) { $0 }
             var vector3 = try Vector(0..<size) { $0 }
 
-            // These should all be consistent
             let countEven = vector1.count(where: { $0 % 2 == 0 })
             let anyEven = vector2.satisfies.any { $0 % 2 == 0 }
             let allEven = vector3.satisfies.all { $0 % 2 == 0 }
 
-            // Verify relationships
             if size == 0 {
                 #expect(countEven == 0)
                 #expect(!anyEven)
-                #expect(allEven)  // vacuously true
+                #expect(allEven)
             } else if size == 1 {
-                #expect(countEven == 1)  // 0 is even
+                #expect(countEven == 1)
                 #expect(anyEven)
-                #expect(allEven)  // only 0, which is even
+                #expect(allEven)
             } else {
                 #expect(countEven > 0)
                 #expect(anyEven)
-                #expect(!allEven)  // 1 is odd
+                #expect(!allEven)
             }
         }
     }
 }
-
-// MARK: - Drop/Prefix Tests
 
 enum VectorDropPrefixTests {
     @Suite struct Drop {}
@@ -840,8 +793,6 @@ enum VectorDropPrefixTests {
     @Suite struct Reversed {}
 }
 
-// MARK: - Drop Tests
-
 extension VectorDropPrefixTests.Drop {
 
     @Test
@@ -849,10 +800,8 @@ extension VectorDropPrefixTests.Drop {
         let vector = try Vector(0..<10) { $0 }
         let dropped = vector.drop.first(3)
 
-        // Verify it's still a vector with correct count
         #expect(dropped.count == 7)
 
-        // Verify contents
         var results: [Int] = []
         let d = dropped
         d.forEach { results.append($0) }
@@ -904,8 +853,6 @@ extension VectorDropPrefixTests.Drop {
     }
 }
 
-// MARK: - Prefix Tests
-
 extension VectorDropPrefixTests.Prefix {
 
     @Test
@@ -913,10 +860,8 @@ extension VectorDropPrefixTests.Prefix {
         let vector = try Vector(0..<10) { $0 }
         let prefixed = vector.prefix.first(3)
 
-        // Verify it's still a vector with correct count
         #expect(prefixed.count == 3)
 
-        // Verify contents
         var results: [Int] = []
         let p = prefixed
         p.forEach { results.append($0) }
@@ -966,8 +911,6 @@ extension VectorDropPrefixTests.Prefix {
         #expect(results == [0, 2, 4])
     }
 }
-
-// MARK: - Chaining Tests
 
 extension VectorDropPrefixTests.Chaining {
 
@@ -1027,10 +970,10 @@ extension VectorDropPrefixTests.Chaining {
     func `complex chaining maintains correct bounds`() throws(VectorTestError) {
         let vector = try Vector(0..<20) { $0 }
         let result = vector
-            .drop.first(5)  // 5..<20
-            .prefix.first(10)  // 5..<15
-            .drop.first(2)  // 7..<15
-            .prefix.first(5)  // 7..<12
+            .drop.first(5)
+            .prefix.first(10)
+            .drop.first(2)
+            .prefix.first(5)
 
         #expect(result.count == 5)
 
@@ -1041,8 +984,6 @@ extension VectorDropPrefixTests.Chaining {
     }
 }
 
-// MARK: - Reversed Tests
-
 extension VectorDropPrefixTests.Reversed {
 
     @Test
@@ -1051,8 +992,6 @@ extension VectorDropPrefixTests.Reversed {
         let reversed = vector.reversed()
         let dropped = reversed.drop.first(3)
 
-        // Original: [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
-        // After drop.first(3): [6, 5, 4, 3, 2, 1, 0]
         #expect(dropped.count == 7)
 
         var results: [Int] = []
@@ -1067,8 +1006,6 @@ extension VectorDropPrefixTests.Reversed {
         let reversed = vector.reversed()
         let prefixed = reversed.prefix.first(3)
 
-        // Original: [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
-        // After prefix.first(3): [9, 8, 7]
         #expect(prefixed.count == 3)
 
         var results: [Int] = []
@@ -1082,8 +1019,6 @@ extension VectorDropPrefixTests.Reversed {
         let vector = try Vector(0..<10) { $0 }
         let reversed = vector.reversed()
 
-        // Iteration order: 9, 8, 7, 6, 5, 4, 3, 2, 1, 0
-        // Drop while > 5: drops 9, 8, 7, 6, keeps [5, 4, 3, 2, 1, 0]
         let result = reversed.drop.while { $0 > 5 }
         #expect(result == [5, 4, 3, 2, 1, 0])
     }
@@ -1093,8 +1028,6 @@ extension VectorDropPrefixTests.Reversed {
         let vector = try Vector(0..<10) { $0 }
         let reversed = vector.reversed()
 
-        // Iteration order: 9, 8, 7, 6, 5, 4, 3, 2, 1, 0
-        // Prefix while > 5: takes [9, 8, 7, 6]
         let result = reversed.prefix.while { $0 > 5 }
         #expect(result == [9, 8, 7, 6])
     }
@@ -1111,8 +1044,6 @@ extension VectorDropPrefixTests.Reversed {
     }
 }
 
-// MARK: - Invariant Tests for Drop/Prefix
-
 enum VectorDropPrefixInvariantTests {
     @Suite struct Invariants {}
 }
@@ -1128,7 +1059,6 @@ extension VectorDropPrefixInvariantTests.Invariants {
         for size in sizes {
             let vector = try Vector(count: size)
 
-            // Structurally meaningful: empty, minimal, exact, overflow
             let dropCandidates: [Vector<UInt>.Index.Count] = [0, 1, size, size + 5]
 
             for dropCount in dropCandidates {
@@ -1157,7 +1087,6 @@ extension VectorDropPrefixInvariantTests.Invariants {
         let d = dropped
         d.forEach { results.append($0) }
 
-        // Indices 3, 4, 5, 6, 7, 8, 9 → transformed: 10, 13, 16, 19, 22, 25, 28
         #expect(results == [10, 13, 16, 19, 22, 25, 28])
     }
 
@@ -1170,7 +1099,6 @@ extension VectorDropPrefixInvariantTests.Invariants {
         let p = prefixed
         p.forEach { results.append($0) }
 
-        // Indices 0, 1, 2, 3 → transformed: 1, 4, 7, 10
         #expect(results == [1, 4, 7, 10])
     }
 
@@ -1179,15 +1107,12 @@ extension VectorDropPrefixInvariantTests.Invariants {
         for size in [0, 1, 5, 20] {
             let vector = try Vector(0..<size) { $0 }
 
-            // drop.first(0) should be identity
             let afterDrop0 = vector.drop.first(0)
             #expect(afterDrop0.count == vector.count)
 
-            // prefix.first(count) should be identity
             let afterPrefixAll = vector.prefix.first(vector.count)
             #expect(afterPrefixAll.count == vector.count)
 
-            // prefix.first(count + 100) saturates back to count (still identity)
             let afterPrefixMore = vector.prefix.first(vector.count + Vector<Int>.Index.Count(100))
             #expect(afterPrefixMore.count == vector.count)
         }
@@ -1197,7 +1122,6 @@ extension VectorDropPrefixInvariantTests.Invariants {
     func `INVARIANT: order of operations matters`() throws(VectorTestError) {
         let vector = try Vector(0..<10) { $0 }
 
-        // drop(3).prefix(4) vs prefix(4).drop(3) should differ
         let dropThenPrefix = vector.drop.first(3).prefix.first(4)
         let prefixThenDrop = vector.prefix.first(4).drop.first(3)
 
@@ -1209,18 +1133,10 @@ extension VectorDropPrefixInvariantTests.Invariants {
         let ptdVector = prefixThenDrop
         ptdVector.forEach { ptd.append($0) }
 
-        // drop(3).prefix(4): [3, 4, 5, 6]
-        // prefix(4).drop(3): [3]
         #expect(dtp == [3, 4, 5, 6])
         #expect(ptd == [3])
     }
 }
-
-// MARK: - Cardinal Distance Invariant Tests
-//
-// These tests verify the principled approach of using cardinal distance
-// (Ordinal.distance.forward) instead of affine subtraction
-// for computing vector counts. Cardinal distance handles the full UInt range.
 
 enum VectorCardinalDistanceTests {
     @Suite struct Invariants {}
@@ -1229,18 +1145,17 @@ enum VectorCardinalDistanceTests {
 
 extension VectorCardinalDistanceTests.Invariants {
     @Test(arguments: [
-        (0, 0),  // empty
-        (0, 1),  // single element
-        (0, 100),  // normal vector
-        (50, 150),  // offset vector
-        (1000, 1000),  // empty at offset
+        (0, 0),
+        (0, 1),
+        (0, 100),
+        (50, 150),
+        (1000, 1000),
     ])
     func `INVARIANT: count equals cardinal distance between positions`(
         start: Vector<UInt>.Index,
         end: Vector<UInt>.Index
     ) throws(Vector<UInt>.Error) {
-        // SAFETY: test fixtures guarantee end >= start, so `.unchecked(to:)`
-        // is the proven-monotonic call site per ordinal-primitives' docs.
+
         let cardinalDistance = start.position.distance.unchecked(to: end.position)
 
         let vector = try Vector(start: start, end: end)
@@ -1275,14 +1190,12 @@ extension VectorCardinalDistanceTests.Invariants {
         let dropped = vector.drop.first(30)
         #expect(dropped.count == 70)
 
-        // SAFETY: drop preserves dropped.start <= dropped.end by construction.
         let droppedDistance = dropped.start.position.distance.unchecked(to: dropped.end.position)
         #expect(dropped.count == Vector<UInt>.Index.Count(droppedDistance))
 
         let prefixed = vector.prefix.first(40)
         #expect(prefixed.count == 40)
 
-        // SAFETY: prefix preserves prefixed.start <= prefixed.end by construction.
         let prefixedDistance = prefixed.start.position.distance.unchecked(to: prefixed.end.position)
         #expect(prefixed.count == Vector<UInt>.Index.Count(prefixedDistance))
     }
@@ -1308,21 +1221,16 @@ extension VectorCardinalDistanceTests.`Large Vectors` {
 
     @Test
     func `INVARIANT: vectors exceeding Int.max distance work`() {
-        // Cardinal distance handles full UInt range.
-        // Affine subtraction would fail for distances > Int.max.
 
         let intMax: Vector<UInt>.Index.Count = Vector<UInt>.Index.Count(UInt(Int.max))
 
-        // Distance exactly Int.max
         let vectorAtLimit: Vector = Vector(count: intMax)
         #expect(vectorAtLimit.count == intMax)
 
-        // Distance Int.max + 1 (would FAIL with affine subtraction)
         let beyondIntMax = intMax + .one
         let vectorBeyond: Vector = Vector(count: beyondIntMax)
         #expect(vectorBeyond.count == beyondIntMax)
 
-        // Distance Int.max + 1000
         let wellBeyond: Vector<UInt>.Index.Count = intMax + Vector<UInt>.Index.Count(1000)
         let vectorWellBeyond: Vector = Vector(count: wellBeyond)
         #expect(vectorWellBeyond.count == wellBeyond)
@@ -1339,7 +1247,6 @@ extension VectorCardinalDistanceTests.`Large Vectors` {
 
         #expect(vector.count == Vector<UInt>.Index.Count(distance))
 
-        // SAFETY: `Vector(start..<end)` preserves `vector.start <= vector.end`.
         let cardinalDistance = vector.start.position.distance.unchecked(to: vector.end.position)
         #expect(vector.count == Vector<UInt>.Index.Count(cardinalDistance))
     }
@@ -1348,11 +1255,9 @@ extension VectorCardinalDistanceTests.`Large Vectors` {
     func `INVARIANT: vectors near UInt.max work`() {
         let max = UInt.max
 
-        // Vector ending near UInt.max
         let vectorNearMax = Vector((max - 100)..<max) { $0 }
         #expect(vectorNearMax.count == Vector<UInt>.Index.Count(100))
 
-        // Empty vector near UInt.max
         let emptyNearMax = Vector((max - 1)..<(max - 1)) { $0 }
         #expect(emptyNearMax.isEmpty)
         #expect(emptyNearMax.count == .zero)
@@ -1360,12 +1265,11 @@ extension VectorCardinalDistanceTests.`Large Vectors` {
 
     @Test
     func `INVARIANT: maximum possible vector 0 to UInt.max`() {
-        // The largest possible vector
+
         let vector = Vector(0..<UInt.max) { $0 }
 
         #expect(vector.count == Vector<UInt>.Index.Count(UInt.max))
 
-        // SAFETY: `Vector(0..<UInt.max)` preserves `vector.start <= vector.end`.
         let distance = vector.start.position.distance.unchecked(to: vector.end.position)
         #expect(distance.rawValue == UInt.max)
     }
