@@ -1,9 +1,9 @@
-public import Index_Primitives
-import Property_Primitives
+public import Index
+import Property
 
 public struct Vector<Bound: ~Copyable> {
 
-    public typealias Index = Index_Primitives.Index<Vector<Bound>>
+    public typealias Index = Index.Index<Vector<Bound>>
 
     public enum ForEach {}
 

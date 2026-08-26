@@ -2,7 +2,7 @@
 # Triaged by AI-assisted bulk pass (2026-04-29).
 description: "Typed half-open integer ranges with compile-time-checked index arithmetic and O(1) prefix/drop slicing for Swift."
 topics:
-  - primitives
+  - molecules
   - vector
 homepage: "https://swift-institute.org"
 readme:

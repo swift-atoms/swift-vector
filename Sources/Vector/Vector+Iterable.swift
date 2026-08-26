@@ -1,7 +1,7 @@
 public import Iterable
-public import Iterator_Chunk_Primitives
+public import Iterator_Chunk
 public import Iterator_Primitive
-public import Iterator_Witness_Primitives
+public import Iterator_Witness
 public import Vector_Primitive
 
 extension Vector.Iterator: Iterator_Primitive.Iterator.`Protocol`, IteratorProtocol

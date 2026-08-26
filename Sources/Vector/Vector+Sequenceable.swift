@@ -1,4 +1,4 @@
-public import Sequence_Primitives
+public import Sequence
 public import Vector_Primitive
 
 extension Vector: Sequenceable where Bound: Copyable {}
