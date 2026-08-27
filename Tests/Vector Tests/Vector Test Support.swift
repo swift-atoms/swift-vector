@@ -1,4 +1,4 @@
-import Index_Test_Support
+import Index
 public import Vector
 
 extension Vector where Bound == UInt {

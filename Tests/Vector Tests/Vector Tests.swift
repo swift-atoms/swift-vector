@@ -1,5 +1,4 @@
 import Testing
-import Vector_Test_Support
 
 @testable import Vector
 
