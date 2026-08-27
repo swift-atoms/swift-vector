@@ -17,12 +17,12 @@ let package = Package(
             targets: ["Vector"]
         ),
         .library(
-            name: "Vector Standard Library Integration",
-            targets: ["Vector Standard Library Integration"]
-        ),
-        .library(
             name: "Vector Apple Foundation Integration",
             targets: ["Vector Apple Foundation Integration"]
+        ),
+        .library(
+            name: "Vector Test Support",
+            targets: ["Vector Test Support"]
         ),
     ],
     dependencies: [
@@ -44,24 +44,22 @@ let package = Package(
             ]
         ),
         .target(
-            name: "Vector Standard Library Integration",
+            name: "Vector Apple Foundation Integration",
+            dependencies: ["Vector"]
+        ),
+        .target(
+            name: "Vector Test Support",
             dependencies: [
                 "Vector",
                 .product(name: "Index", package: "swift-index"),
-            ]
-        ),
-        .target(
-            name: "Vector Apple Foundation Integration",
-            dependencies: [
-                "Vector",
-                "Vector Standard Library Integration",
-            ]
+            ],
+            path: "Tests/Support"
         ),
         .testTarget(
             name: "Vector Tests",
             dependencies: [
                 "Vector",
-                .product(name: "Index", package: "swift-index"),
+                "Vector Test Support",
             ]
         ),
     ],

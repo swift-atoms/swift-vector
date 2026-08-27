@@ -15,9 +15,10 @@ extension Vector.Prefix where Bound: Copyable {
 
     @inlinable
     public consuming func first(
-        _ count: Vector<Bound>.Index.Count
+        _ count: Vector<Bound>.Count
     ) -> Vector<Bound> {
-        let newEnd = base.start.advance.clamped(by: count, to: base.end)
+        let kept = Swift.min(count, base.count)
+        let newEnd: Vector<Bound>.Index = _index(_rawValue(base.start) + kept)
 
         return Vector<Bound>(
             __unchecked: (),
@@ -30,13 +31,14 @@ extension Vector.Prefix where Bound: Copyable {
     @inlinable
     public consuming func `while`(_ predicate: (Bound) -> Bool) -> [Bound] {
         var result: [Bound] = []
-        var i = base.start
-        while i < base.end {
-            let element = base.transform(i)
+        var i = _rawValue(base.start)
+        let end = _rawValue(base.end)
+        while i < end {
+            let element = base.transform(_index(i))
             if !predicate(element) { break }
             result.append(element)
 
-            i += .one
+            i += 1
         }
         return result
     }

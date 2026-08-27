@@ -1,15 +1,15 @@
-public import Index
-import Property
+public import Property
 
 public struct Vector<Bound: ~Copyable> {
 
-    public typealias Index = Index.Index<Vector<Bound>>
+    public typealias Index = VectorIndex<Bound>
+    public typealias Count = UInt
 
     public enum ForEach {}
 
     public enum Drain {}
 
-    public enum Error: Swift.Error, Hashable, Sendable {
+    public enum Error: Swift.Error, Sendable {
 
         case invalidBounds(start: Index, end: Index)
     }
@@ -19,10 +19,10 @@ public struct Vector<Bound: ~Copyable> {
     public var end: Index
 
     @usableFromInline
-    var _count: Index.Count
+    var _count: Count
 
     @inlinable
-    public var count: Index.Count {
+    public var count: Count {
         _read { yield _count }
         _modify { yield &_count }
     }
@@ -49,10 +49,10 @@ public struct Vector<Bound: ~Copyable> {
 
         @inlinable
         public mutating func next() -> Bound? {
-            guard current < end else { return nil }
+            guard _rawValue(current) < _rawValue(end) else { return nil }
             let result = transform(current)
 
-            current += .one
+            current = _successor(current)
             return result
         }
     }
@@ -65,10 +65,10 @@ public struct Vector<Bound: ~Copyable> {
         var end: Index
 
         @usableFromInline
-        var _count: Index.Count
+        var _count: Count
 
         @inlinable
-        public var count: Index.Count {
+        public var count: Count {
             _read { yield _count }
             _modify { yield &_count }
         }
@@ -95,18 +95,13 @@ public struct Vector<Bound: ~Copyable> {
                 self.start = start
                 self.transform = transform
 
-                if start == end {
+                if _rawValue(start) == _rawValue(end) {
                     self.current = start
                     self.exhausted = true
                 } else {
 
-                    do throws(Ordinal.Error) {
-                        self.current = try end.predecessor.exact()
-                        self.exhausted = false
-                    } catch {
-                        self.current = start
-                        self.exhausted = true
-                    }
+                    self.current = _predecessor(end)
+                    self.exhausted = false
                 }
             }
 
@@ -116,15 +111,10 @@ public struct Vector<Bound: ~Copyable> {
 
                 let result = transform(current)
 
-                if current == start {
+                if _rawValue(current) == _rawValue(start) {
                     exhausted = true
                 } else {
-
-                    do throws(Ordinal.Error) {
-                        current = try current.predecessor.exact()
-                    } catch {
-                        exhausted = true
-                    }
+                    current = _predecessor(current)
                 }
 
                 return result
@@ -135,7 +125,7 @@ public struct Vector<Bound: ~Copyable> {
         init(
             start: Index,
             end: Index,
-            count: Index.Count,
+            count: Count,
             transform: @escaping @Sendable (Index) -> Bound
         ) {
             self.start = start
@@ -154,16 +144,12 @@ public struct Vector<Bound: ~Copyable> {
             self.start = start
             self.end = end
 
-            do throws(Ordinal.Error) {
-                self._count = Index.Count(try start.position.distance.forward(to: end.position))
-            } catch {
-                fatalError("invariant violation: \(error)")
-            }
+            self._count = _rawValue(end) - _rawValue(start)
             self.transform = transform
         }
 
         @inlinable
-        public var isEmpty: Bool { count == .zero }
+        public var isEmpty: Bool { count == 0 }
 
         @inlinable
         public consuming func makeIterator() -> Iterator {
@@ -176,23 +162,13 @@ public struct Vector<Bound: ~Copyable> {
         ) throws(E) {
             guard !isEmpty else { return }
 
-            let initial: Index
-            do throws(Ordinal.Error) {
-                initial = try end.predecessor.exact()
-            } catch {
-                return
-            }
+            let initial = _predecessor(end)
             var i = initial
-            while i >= start {
+            while _rawValue(i) >= _rawValue(start) {
                 let bound = transform(i)
                 try body(bound)
-                if i == start { break }
-
-                do throws(Ordinal.Error) {
-                    i = try i.predecessor.exact()
-                } catch {
-                    break
-                }
+                if _rawValue(i) == _rawValue(start) { break }
+                i = _predecessor(i)
             }
         }
 
@@ -200,25 +176,15 @@ public struct Vector<Bound: ~Copyable> {
         package mutating func _consumingDrain(_ body: (consuming Bound) -> Void) {
             guard !isEmpty else { return }
 
-            let initial: Index
-            do throws(Ordinal.Error) {
-                initial = try end.predecessor.exact()
-            } catch {
-                return
-            }
+            let initial = _predecessor(end)
             var i = initial
-            while i >= start {
+            while _rawValue(i) >= _rawValue(start) {
                 body(transform(i))
-                if i == start { break }
-
-                do throws(Ordinal.Error) {
-                    i = try i.predecessor.exact()
-                } catch {
-                    break
-                }
+                if _rawValue(i) == _rawValue(start) { break }
+                i = _predecessor(i)
             }
             start = end
-            count = .zero
+            count = 0
         }
 
         @inlinable
@@ -227,24 +193,18 @@ public struct Vector<Bound: ~Copyable> {
         }
 
         @inlinable
-        public var drain: Property<Drain, Self>.Inout {
-            mutating _read {
-                yield Property<Drain, Self>.Inout(&self)
-            }
-            mutating _modify {
-                var accessor = Property<Drain, Self>.Inout(&self)
-                yield &accessor
-            }
+        public mutating func drain(_ body: (consuming Bound) -> Void) {
+            _consumingDrain(body)
         }
     }
 
     @inlinable
     public init(
-        count: Index.Count,
+        count: Count,
         transform: @escaping @Sendable (Index) -> Bound
     ) {
-        self.start = .zero
-        self.end = .zero + count
+        self.start = _index(0)
+        self.end = _index(count)
         self._count = count
         self.transform = transform
     }
@@ -255,17 +215,13 @@ public struct Vector<Bound: ~Copyable> {
         end: Index,
         transform: @escaping @Sendable (Index) -> Bound
     ) throws(Self.Error) {
-        guard start <= end else {
+        guard _rawValue(start) <= _rawValue(end) else {
             throw .invalidBounds(start: start, end: end)
         }
         self.start = start
         self.end = end
 
-        do throws(Ordinal.Error) {
-            self._count = Index.Count(try start.position.distance.forward(to: end.position))
-        } catch {
-            fatalError("invariant violation: \(error)")
-        }
+        self._count = _rawValue(end) - _rawValue(start)
         self.transform = transform
     }
 
@@ -279,16 +235,18 @@ public struct Vector<Bound: ~Copyable> {
         self.start = start
         self.end = end
 
-        do throws(Ordinal.Error) {
-            self._count = Index.Count(try start.position.distance.forward(to: end.position))
-        } catch {
-            fatalError("invariant violation: \(error)")
-        }
+        self._count = _rawValue(end) - _rawValue(start)
         self.transform = transform
     }
 
     @inlinable
-    public var isEmpty: Bool { count == .zero }
+    public var isEmpty: Bool { count == 0 }
+
+    @inlinable
+    public subscript(offset: Count) -> Bound {
+        precondition(offset < count, "Offset out of bounds")
+        return transform(_index(_rawValue(start) + offset))
+    }
 
     @inlinable
     public consuming func makeIterator() -> Iterator {
@@ -305,24 +263,24 @@ public struct Vector<Bound: ~Copyable> {
         _ body: (borrowing Bound) throws(E) -> Void
     ) throws(E) {
         var i = start
-        while i < end {
+        while _rawValue(i) < _rawValue(end) {
             let bound = transform(i)
             try body(bound)
 
-            i += .one
+            i = _successor(i)
         }
     }
 
     @inlinable
     package mutating func _consumingDrain(_ body: (consuming Bound) -> Void) {
         var i = start
-        while i < end {
+        while _rawValue(i) < _rawValue(end) {
             body(transform(i))
 
-            i += .one
+            i = _successor(i)
         }
         start = end
-        count = .zero
+        count = 0
     }
 
     @inlinable
@@ -331,14 +289,8 @@ public struct Vector<Bound: ~Copyable> {
     }
 
     @inlinable
-    public var drain: Property<Drain, Self>.Inout {
-        mutating _read {
-            yield Property<Drain, Self>.Inout(&self)
-        }
-        mutating _modify {
-            var accessor = Property<Drain, Self>.Inout(&self)
-            yield &accessor
-        }
+    public mutating func drain(_ body: (consuming Bound) -> Void) {
+        _consumingDrain(body)
     }
 }
 

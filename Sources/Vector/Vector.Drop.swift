@@ -15,9 +15,10 @@ extension Vector.Drop where Bound: Copyable {
 
     @inlinable
     public consuming func first(
-        _ count: Vector<Bound>.Index.Count
+        _ count: Vector<Bound>.Count
     ) -> Vector<Bound> {
-        let newStart = base.start.advance.clamped(by: count, to: base.end)
+        let dropped = Swift.min(count, base.count)
+        let newStart: Vector<Bound>.Index = _index(_rawValue(base.start) + dropped)
         return Vector<Bound>(
             __unchecked: (),
             start: newStart,
@@ -30,11 +31,12 @@ extension Vector.Drop where Bound: Copyable {
     public consuming func `while`(_ predicate: (Bound) -> Bool) -> [Bound] {
         var result: [Bound] = []
         var dropping = true
-        var i = base.start
-        while i < base.end {
-            let element = base.transform(i)
+        var i = _rawValue(base.start)
+        let end = _rawValue(base.end)
+        while i < end {
+            let element = base.transform(_index(i))
 
-            let next = i + .one
+            let next = i + 1
             if dropping && predicate(element) {
                 i = next
                 continue

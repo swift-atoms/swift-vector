@@ -2,11 +2,10 @@
 
 ![Development Status](https://img.shields.io/badge/status-active--development-blue.svg)
 
-Typed half-open integer ranges for Swift — `Vector<Bound>` modeling an index-domain range with typed `Index<Bound>` positions, `Index<Bound>.Offset` displacements, and `Index<Bound>.Count` cardinalities. Companion `Vector.Drop`, `Vector.Prefix`, `Vector.Reversed.{Drop, Prefix}` views compose with the underlying vector to model partial-range slicing without copying, threading typed positions end-to-end so arithmetic mistakes that `Int`-based ranges would silently allow become compile-time errors.
-
-The vector pattern in this package serves the same role as a stdlib `Range<Int>` does for integer iteration, but typed: bounds are `Tagged<Bound, Ordinal>`, counts are `Index<Bound>.Count`, and the views and iteration surface (`Vector.ForEach`, `Vector.Drain`) align with the rest of the data-structures cohort. `Vector` is the index-domain primitive that sits underneath `Cyclic.Group.Static<n>`, sequences over indexed collections, and parser cursor positions.
-
-This package is part of **Story 2 of the data-structures cohort** (`data-structures-launch-2026`): seven packages introducing typed indexing and sequences — order, index, sequence, collection, input, cyclic, **vector**.
+`Vector<Bound>` is a lazy half-open generator over typed
+`Index<Vector<Bound>>` positions. It keeps typed start and end positions, uses
+`UInt` for local cardinality, and produces each bound on demand without
+allocating backing storage.
 
 ---
 
@@ -15,31 +14,24 @@ This package is part of **Story 2 of the data-structures cohort** (`data-structu
 ```swift
 import Vector
 
-// A Vector is a scalar generator over a half-open range: each element is produced
-// on demand by the transform, so there is no backing buffer to copy.
-let squares = try Vector(0..<10) { $0 * $0 }
+let repeated = Vector<String>(count: 3) { _ in "value" }
 
-// Borrowing iteration — the vector survives.
-squares.forEach { value in
-    print(value)                   // 0, 1, 4, 9, 16, …
+repeated.forEach { value in
+    print(value)
 }
 
-// Consuming iteration — the vector is drained to empty.
-var consumable = try Vector(0..<5) { $0 }
+var consumable = repeated
 consumable.drain { value in
     print(value)
 }
 
-// O(1) prefix / drop views that re-bound the range without recomputing elements.
-let head = squares.prefix.first(try .init(3))   // first 3 → 0, 1, 4
-let tail = squares.drop.first(try .init(4))      // drops 4 → 16, 25, 36, 49, 64, 81
-
-// Reverse the range, then iterate or slice the reversed view.
-let reversed = squares.reversed()
-reversed.forEach { value in
-    print(value)                   // 81, 64, 49, …
-}
+let head = repeated.prefix.first(2)
+let tail = repeated.drop.first(1)
+let reversed = repeated.reversed()
 ```
+
+`Vector Test Support` adds convenient `Range<Int>` and `Range<UInt>` fixtures
+for tests.
 
 ---
 
@@ -49,7 +41,7 @@ Add to your `Package.swift`:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/swift-molecules/swift-vector.git", branch: "main"),
+    .package(url: "https://github.com/swift-atoms/swift-vector.git", branch: "main"),
 ]
 ```
 
@@ -62,20 +54,20 @@ dependencies: [
 )
 ```
 
-The package is pre-1.0 — until 0.1.0 is tagged, depend on `branch: "main"` rather than `from: "0.1.0"`. Requires Swift 6.3.1 and macOS 26 / iOS 26 / tvOS 26 / watchOS 26 / visionOS 26 (or the matching Linux / Windows toolchain).
+The package is pre-1.0. It requires Swift 6.4 and macOS 27, iOS 27, tvOS 27,
+watchOS 27, or visionOS 27, with matching Linux and Windows toolchains.
 
 ---
 
 ## Architecture
 
-Three library products. Foundation-free. No concurrency surface. No platform conditionals.
+Three library products. Foundation is confined to the AFI target.
 
 | Product | When to import | What's in it |
 |---------|---------------|--------------|
-| `Vector` | Default for application code | Umbrella re-exporting the primitive and Standard Library Integration surfaces. |
-| `Vector Primitive` | When you want only the typed-vector surface | `Vector<Bound>`, `Vector.Drop`, `Vector.Prefix`, `Vector.Reversed.{Drop, Prefix}`, `Vector.ForEach`, `Vector.Drain`, and the typed-index integration. |
-| `Vector Standard Library Integration` | Cursors over `Swift.UnsafePointer` / `Swift.UnsafeRawPointer` / `Swift.UnsafeBufferPointer` / `Swift.UnsafeMutableRawPointer` | Stdlib pointer types with `Vector<Index>` integration. |
-| `Vector Test Support` | Test targets | Test fixtures and re-exports for downstream test consumers. |
+| `Vector` | Default application code | Typed positions, lazy generation, iteration, draining, reversal, prefix, and drop views. |
+| `Vector Apple Foundation Integration` | Apple clients that need Foundation | Re-exports the core and Foundation. |
+| `Vector Test Support` | Test targets | Range-based fixtures and the core re-export. |
 
 ---
 
@@ -83,7 +75,7 @@ Three library products. Foundation-free. No concurrency surface. No platform con
 
 | Platform | CI | Status |
 |----------|-----|--------|
-| macOS 26 | Yes | Full support |
+| macOS 27 | Yes | Full support |
 | iOS / tvOS / watchOS / visionOS | — | Supported |
 | Linux | Yes | Full support |
 | Windows | Yes | Full support |
@@ -98,15 +90,10 @@ Pre-1.0. The public API may change while the package remains on `branch: "main"`
 
 ## Related Packages
 
-Direct dependencies (all already-public):
+Direct dependencies:
 
-- [swift-index](https://github.com/swift-molecules/swift-index) — `Index<Bound>`, `Index.Offset`, `Index.Count`, the typed-indexing surface Vector is built on.
-- [swift-cyclic](https://github.com/swift-molecules/swift-cyclic) — `Cyclic.Group.Static<n>` modular arithmetic; vector and cyclic compose at the index layer.
-- [swift-property](https://github.com/swift-molecules/swift-property) — `Property<Tag, Base>.Inout`, the phantom-tagged fluent-accessor machinery the iteration surface composes with.
-- [swift-range](https://github.com/swift-molecules/swift-range) — terminal operations on `Swift.Range<Bound>` used at the iteration boundary.
-- [swift-sequence](https://github.com/swift-molecules/swift-sequence) — `Sequence.Protocol` and the iterator protocol family the views conform to for stdlib bridging.
-
-Cohort siblings (Story 2 — Typed indexing and sequences) — see [`data-structures-launch-2026`](https://github.com/swift-institute) for the cohort narrative.
+- [swift-index](https://github.com/swift-atoms/swift-index) provides typed index positions.
+- [swift-property](https://github.com/swift-atoms/swift-property) provides the tagged `forEach` accessor.
 
 ---
 
