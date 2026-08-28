@@ -1,11 +1,11 @@
-public import Index_Primitives
+public import Index
 
 extension Vector {
 
     @inlinable
     public init<Tag: ~Copyable & ~Escapable>(
-        _ range: Swift.Range<Index_Primitives.Index<Tag>>
-    ) where Bound == Index_Primitives.Index<Tag> {
+        _ range: Swift.Range<Index.Index<Tag>>
+    ) where Bound == Index.Index<Tag> {
         let start: Vector<Bound>.Index = range.lowerBound.retag()
         let end: Vector<Bound>.Index = range.upperBound.retag()
 
@@ -21,9 +21,9 @@ extension Vector {
 extension Vector {
 
     @inlinable
-    public subscript<Tag: ~Copyable & ~Escapable>(offset: Index_Primitives.Index<Tag>.Offset)
-        -> Index_Primitives.Index<Tag>
-    where Bound == Index_Primitives.Index<Tag> {
+    public subscript<Tag: ~Copyable & ~Escapable>(offset: Index.Index<Tag>.Offset)
+        -> Index.Index<Tag>
+    where Bound == Index.Index<Tag> {
         let vectorOffset: Vector<Bound>.Index.Offset = offset.retag()
         precondition(vectorOffset < count, "Offset out of bounds")
 
@@ -40,9 +40,9 @@ extension Vector {
 extension Vector.Reversed {
 
     @inlinable
-    public subscript<Tag: ~Copyable & ~Escapable>(offset: Index_Primitives.Index<Tag>.Offset)
-        -> Index_Primitives.Index<Tag>
-    where Bound == Index_Primitives.Index<Tag> {
+    public subscript<Tag: ~Copyable & ~Escapable>(offset: Index.Index<Tag>.Offset)
+        -> Index.Index<Tag>
+    where Bound == Index.Index<Tag> {
         let vectorOffset: Vector<Bound>.Index.Offset = offset.retag()
         precondition(vectorOffset < count, "Offset out of bounds")
 

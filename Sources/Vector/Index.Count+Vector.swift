@@ -1,4 +1,4 @@
-public import Index_Primitives
+public import Index
 
 @inlinable
 public func ..< <Tag: ~Copyable & ~Escapable>(

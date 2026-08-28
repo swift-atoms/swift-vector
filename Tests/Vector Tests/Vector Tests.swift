@@ -1,7 +1,7 @@
 import Testing
-import Vector_Primitives_Test_Support
+import Vector_Test_Support
 
-@testable import Vector_Primitives
+@testable import Vector
 
 enum VectorTests {
     @Suite struct Unit {}

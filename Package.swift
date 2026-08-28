@@ -3,7 +3,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "swift-vector-primitives",
+    name: "swift-vector",
     platforms: [
         .macOS(.v27),
         .iOS(.v27),
@@ -14,82 +14,70 @@ let package = Package(
     products: [
 
         .library(
-            name: "Vector Primitive",
-            targets: ["Vector Primitive"]
-        ),
-
-        .library(
-            name: "Vector Primitives",
-            targets: ["Vector Primitives"]
+            name: "Vector",
+            targets: ["Vector"]
         ),
         .library(
-            name: "Vector Primitives Standard Library Integration",
-            targets: ["Vector Primitives Standard Library Integration"]
+            name: "Vector Standard Library Integration",
+            targets: ["Vector Standard Library Integration"]
         ),
         .library(
-            name: "Vector Primitives Test Support",
-            targets: ["Vector Primitives Test Support"]
+            name: "Vector Test Support",
+            targets: ["Vector Test Support"]
         ),
     ],
     dependencies: [
         .package(
-            url: "https://github.com/swift-primitives/swift-index-primitives.git",
+            url: "https://github.com/swift-atoms/swift-index.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-primitives/swift-property-primitives.git",
+            url: "https://github.com/swift-atoms/swift-property.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-primitives/swift-sequence-primitives.git",
+            url: "https://github.com/swift-atoms/swift-sequence.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-primitives/swift-iterator-primitives.git",
+            url: "https://github.com/swift-atoms/swift-iterator.git",
             branch: "main"
         ),
     ],
     targets: [
 
         .target(
-            name: "Vector Primitive",
+            name: "Vector",
             dependencies: [
-                .product(name: "Index Primitives", package: "swift-index-primitives"),
-                .product(name: "Property Primitives", package: "swift-property-primitives"),
+                .product(name: "Index", package: "swift-index"),
+                .product(name: "Property", package: "swift-property"),
+                .product(name: "Sequence", package: "swift-sequence"),
+                .product(name: "Iterable", package: "swift-iterator"),
+                .product(name: "Iterator Chunk", package: "swift-iterator"),
+                .product(name: "Iterator Witness", package: "swift-iterator"),
             ]
         ),
 
         .target(
-            name: "Vector Primitives Standard Library Integration",
+            name: "Vector Standard Library Integration",
             dependencies: [
-                "Vector Primitive"
+                .target(name: "Vector")
             ]
         ),
 
         .target(
-            name: "Vector Primitives",
+            name: "Vector Test Support",
             dependencies: [
-                "Vector Primitive",
-                "Vector Primitives Standard Library Integration",
-                .product(name: "Sequence Primitives", package: "swift-sequence-primitives"),
-                .product(name: "Iterable", package: "swift-iterator-primitives"),
-                .product(name: "Iterator Chunk Primitives", package: "swift-iterator-primitives"),
-                .product(name: "Iterator Witness Primitives", package: "swift-iterator-primitives"),
-            ]
-        ),
-        .target(
-            name: "Vector Primitives Test Support",
-            dependencies: [
-                "Vector Primitives",
-                .product(name: "Index Primitives Test Support", package: "swift-index-primitives"),
+                .target(name: "Vector"),
+                .product(name: "Index Test Support", package: "swift-index"),
             ],
             path: "Tests/Support"
         ),
         .testTarget(
-            name: "Vector Primitives Tests",
+            name: "Vector Tests",
             dependencies: [
-                "Vector Primitives",
-                "Vector Primitives Test Support",
+                .target(name: "Vector"),
+                .target(name: "Vector Test Support"),
             ]
         ),
     ],

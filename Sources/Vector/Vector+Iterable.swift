@@ -1,13 +1,13 @@
 public import Iterable
-public import Iterator_Chunk_Primitives
-public import Iterator_Primitive
-public import Iterator_Witness_Primitives
-public import Vector_Primitive
+public import Iterator_Chunk
+public import Iterator
+public import Iterator_Witness
+public import Vector
 
-extension Vector.Iterator: Iterator_Primitive.Iterator.`Protocol`, IteratorProtocol
+extension Vector.Iterator: Iterator.Iterator.`Protocol`, IteratorProtocol
 where Bound: Copyable {}
 
-extension Vector.Reversed.Iterator: Iterator_Primitive.Iterator.`Protocol`, IteratorProtocol
+extension Vector.Reversed.Iterator: Iterator.Iterator.`Protocol`, IteratorProtocol
 where Bound: Copyable {}
 
 extension Vector where Bound: Copyable {
@@ -31,21 +31,21 @@ extension Vector: Iterable where Bound: Copyable {
     public typealias Element = Bound
 
     @_implements(Iterable,Iterator)
-    public typealias IterableIterator = Iterator_Primitive.Iterator.Materializing<
-        Iterator_Primitive.Iterator.Witness<Bound, Never>
+    public typealias IterableIterator = Iterator.Iterator.Materializing<
+        Iterator.Iterator.Witness<Bound, Never>
     >
 
     @inlinable
     @_lifetime(borrow self)
     @_implements(Iterable,makeIterator())
     public borrowing func iterableMakeIterator()
-        -> Iterator_Primitive.Iterator.Materializing<
-            Iterator_Primitive.Iterator.Witness<Bound, Never>
+        -> Iterator.Iterator.Materializing<
+            Iterator.Iterator.Witness<Bound, Never>
         >
     {
         let scalar: Iterator = makeIterator()
-        return Iterator_Primitive.Iterator.Materializing(
-            Iterator_Primitive.Iterator.Witness(scalar)
+        return Iterator.Iterator.Materializing(
+            Iterator.Iterator.Witness(scalar)
         )
     }
 }
@@ -55,21 +55,21 @@ extension Vector.Reversed: Iterable where Bound: Copyable {
     public typealias Element = Bound
 
     @_implements(Iterable,Iterator)
-    public typealias IterableIterator = Iterator_Primitive.Iterator.Materializing<
-        Iterator_Primitive.Iterator.Witness<Bound, Never>
+    public typealias IterableIterator = Iterator.Iterator.Materializing<
+        Iterator.Iterator.Witness<Bound, Never>
     >
 
     @inlinable
     @_lifetime(borrow self)
     @_implements(Iterable,makeIterator())
     public borrowing func iterableMakeIterator()
-        -> Iterator_Primitive.Iterator.Materializing<
-            Iterator_Primitive.Iterator.Witness<Bound, Never>
+        -> Iterator.Iterator.Materializing<
+            Iterator.Iterator.Witness<Bound, Never>
         >
     {
         let scalar: Iterator = makeIterator()
-        return Iterator_Primitive.Iterator.Materializing(
-            Iterator_Primitive.Iterator.Witness(scalar)
+        return Iterator.Iterator.Materializing(
+            Iterator.Iterator.Witness(scalar)
         )
     }
 }

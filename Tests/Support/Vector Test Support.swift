@@ -1,5 +1,5 @@
-import Index_Primitives_Test_Support
-public import Vector_Primitives
+import Index_Test_Support
+public import Vector
 
 extension Vector where Bound == UInt {
 

@@ -1,6 +1,6 @@
-internal import Property_Primitives
-public import Sequence_Primitives
-public import Vector_Primitive
+internal import Property
+public import Sequence
+public import Vector
 
 extension Vector where Bound: Copyable {
 
