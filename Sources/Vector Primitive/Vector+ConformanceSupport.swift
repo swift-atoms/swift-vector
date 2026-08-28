@@ -1,3 +1,5 @@
+public import Index
+
 extension Vector where Bound: ~Copyable {
 
     @inlinable
@@ -8,7 +10,7 @@ extension Vector where Bound: ~Copyable {
     @inlinable
     package mutating func _clear() {
         start = end
-        count = 0
+        count = .zero
     }
 }
 
@@ -22,6 +24,6 @@ extension Vector.Reversed where Bound: ~Copyable {
     @inlinable
     package mutating func _clear() {
         start = end
-        count = 0
+        count = .zero
     }
 }

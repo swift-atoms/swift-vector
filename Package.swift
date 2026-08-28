@@ -12,13 +12,19 @@ let package = Package(
         .visionOS(.v27),
     ],
     products: [
+
+        .library(
+            name: "Vector Primitive",
+            targets: ["Vector Primitive"]
+        ),
+
         .library(
             name: "Vector",
             targets: ["Vector"]
         ),
         .library(
-            name: "Vector Apple Foundation Integration",
-            targets: ["Vector Apple Foundation Integration"]
+            name: "Vector Standard Library Integration",
+            targets: ["Vector Standard Library Integration"]
         ),
         .library(
             name: "Vector Test Support",
@@ -27,31 +33,55 @@ let package = Package(
     ],
     dependencies: [
         .package(
-            url: "https://github.com/swift-atoms/swift-index.git",
+            url: "https://github.com/swift-molecules/swift-index.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-atoms/swift-property.git",
+            url: "https://github.com/swift-molecules/swift-property.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-molecules/swift-sequence.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-molecules/swift-iterator.git",
             branch: "main"
         ),
     ],
     targets: [
+
         .target(
-            name: "Vector",
+            name: "Vector Primitive",
             dependencies: [
                 .product(name: "Index", package: "swift-index"),
                 .product(name: "Property", package: "swift-property"),
             ]
         ),
+
         .target(
-            name: "Vector Apple Foundation Integration",
-            dependencies: ["Vector"]
+            name: "Vector Standard Library Integration",
+            dependencies: [
+                "Vector Primitive"
+            ]
+        ),
+
+        .target(
+            name: "Vector",
+            dependencies: [
+                "Vector Primitive",
+                "Vector Standard Library Integration",
+                .product(name: "Sequence", package: "swift-sequence"),
+                .product(name: "Iterable", package: "swift-iterator"),
+                .product(name: "Iterator Chunk", package: "swift-iterator"),
+                .product(name: "Iterator Witness", package: "swift-iterator"),
+            ]
         ),
         .target(
             name: "Vector Test Support",
             dependencies: [
                 "Vector",
-                .product(name: "Index", package: "swift-index"),
+                .product(name: "Index Test Support", package: "swift-index"),
             ],
             path: "Tests/Support"
         ),

@@ -14,9 +14,8 @@ extension Vector.Reversed {
 extension Vector.Reversed.Drop where Bound: Copyable {
 
     @inlinable
-    public consuming func first(_ count: Vector<Bound>.Count) -> Vector<Bound>.Reversed {
-        let dropped = Swift.min(count, base.count)
-        let newEnd: Vector<Bound>.Index = _index(_rawValue(base.end) - dropped)
+    public consuming func first(_ count: Vector<Bound>.Index.Count) -> Vector<Bound>.Reversed {
+        let newEnd = base.end.retreat.clamped(by: count, to: base.start)
         return Vector<Bound>.Reversed(
             __unchecked: (),
             start: base.start,
@@ -31,19 +30,34 @@ extension Vector.Reversed.Drop where Bound: Copyable {
         var dropping = true
         guard !base.isEmpty else { return result }
 
-        var i = _rawValue(base.end) - 1
-        let start = _rawValue(base.start)
-        while i >= start {
-            let element = base.transform(_index(i))
+        let initial: Vector<Bound>.Index
+        do throws(Ordinal.Error) {
+            initial = try base.end.predecessor.exact()
+        } catch {
+            return result
+        }
+        var i = initial
+        while i >= base.start {
+            let element = base.transform(i)
             if dropping && predicate(element) {
-                if i == start { break }
-                i -= 1
+                if i == base.start { break }
+
+                do throws(Ordinal.Error) {
+                    i = try i.predecessor.exact()
+                } catch {
+                    break
+                }
                 continue
             }
             dropping = false
             result.append(element)
-            if i == start { break }
-            i -= 1
+            if i == base.start { break }
+
+            do throws(Ordinal.Error) {
+                i = try i.predecessor.exact()
+            } catch {
+                break
+            }
         }
         return result
     }
