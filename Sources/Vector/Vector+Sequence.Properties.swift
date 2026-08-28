@@ -1,6 +1,6 @@
 internal import Property
 public import Sequence
-public import Vector_Primitive
+public import Vector
 
 extension Vector where Bound: Copyable {
 

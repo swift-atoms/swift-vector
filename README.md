@@ -1,4 +1,4 @@
-# Vector
+# Vector Primitives
 
 ![Development Status](https://img.shields.io/badge/status-active--development-blue.svg)
 
@@ -49,7 +49,7 @@ Add to your `Package.swift`:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/swift-molecules/swift-vector.git", branch: "main"),
+    .package(url: "https://github.com/swift-atoms/swift-vector.git", branch: "main"),
 ]
 ```
 
@@ -72,8 +72,8 @@ Three library products. Foundation-free. No concurrency surface. No platform con
 
 | Product | When to import | What's in it |
 |---------|---------------|--------------|
-| `Vector` | Default for application code | Umbrella re-exporting the primitive and Standard Library Integration surfaces. |
-| `Vector Primitive` | When you want only the typed-vector surface | `Vector<Bound>`, `Vector.Drop`, `Vector.Prefix`, `Vector.Reversed.{Drop, Prefix}`, `Vector.ForEach`, `Vector.Drain`, and the typed-index integration. |
+| `Vector Primitives` | Default for application code | Umbrella re-exporting + Standard Library Integration. |
+| `Vector Primitives Core` | When you want only the typed-vector surface | `Vector<Bound>`, `Vector.Drop`, `Vector.Prefix`, `Vector.Reversed.{Drop, Prefix}`, `Vector.ForEach`, `Vector.Drain`, and the typed-index integration. |
 | `Vector Standard Library Integration` | Cursors over `Swift.UnsafePointer` / `Swift.UnsafeRawPointer` / `Swift.UnsafeBufferPointer` / `Swift.UnsafeMutableRawPointer` | Stdlib pointer types with `Vector<Index>` integration. |
 | `Vector Test Support` | Test targets | Test fixtures and re-exports for downstream test consumers. |
 
@@ -100,11 +100,11 @@ Pre-1.0. The public API may change while the package remains on `branch: "main"`
 
 Direct dependencies (all already-public):
 
-- [swift-index](https://github.com/swift-molecules/swift-index) — `Index<Bound>`, `Index.Offset`, `Index.Count`, the typed-indexing surface Vector is built on.
-- [swift-cyclic](https://github.com/swift-molecules/swift-cyclic) — `Cyclic.Group.Static<n>` modular arithmetic; vector and cyclic compose at the index layer.
-- [swift-property](https://github.com/swift-molecules/swift-property) — `Property<Tag, Base>.Inout`, the phantom-tagged fluent-accessor machinery the iteration surface composes with.
-- [swift-range](https://github.com/swift-molecules/swift-range) — terminal operations on `Swift.Range<Bound>` used at the iteration boundary.
-- [swift-sequence](https://github.com/swift-molecules/swift-sequence) — `Sequence.Protocol` and the iterator protocol family the views conform to for stdlib bridging.
+- [swift-index](https://github.com/swift-atoms/swift-index) — `Index<Bound>`, `Index.Offset`, `Index.Count`, the typed-indexing primitives Vector is built on.
+- [swift-cyclic](https://github.com/swift-atoms/swift-cyclic) — `Cyclic.Group.Static<n>` modular arithmetic; vector and cyclic compose at the index layer.
+- [swift-property](https://github.com/swift-atoms/swift-property) — `Property<Tag, Base>.Inout`, the phantom-tagged fluent-accessor machinery the iteration surface composes with.
+- [swift-range](https://github.com/swift-atoms/swift-range) — terminal operations on `Swift.Range<Bound>` used at the iteration boundary.
+- [swift-sequence](https://github.com/swift-atoms/swift-sequence) — `Sequence.Protocol` and the iterator protocol family the views conform to for stdlib bridging.
 
 Cohort siblings (Story 2 — Typed indexing and sequences) — see [`data-structures-launch-2026`](https://github.com/swift-institute) for the cohort narrative.
 
