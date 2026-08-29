@@ -1,4 +1,8 @@
 import Index_Test_Support
+public import Ordinal
+public import Ordinal_Protocol
+public import Ordinal_Tagged
+public import Tagged
 public import Vector
 
 extension Vector where Bound == UInt {
@@ -10,8 +14,8 @@ extension Vector where Bound == UInt {
 
         self.init(
             __unchecked: (),
-            start: Vector<UInt>.Index(_unchecked: Ordinal(range.lowerBound)),
-            end: Vector<UInt>.Index(_unchecked: Ordinal(range.upperBound)),
+            start: Vector<UInt>.Index(_unchecked: Ordinal::Ordinal(range.lowerBound)),
+            end: Vector<UInt>.Index(_unchecked: Ordinal::Ordinal(range.upperBound)),
             transform: { transform($0.position.rawValue) }
         )
     }
@@ -60,8 +64,8 @@ extension Vector where Bound == Int {
         self.init(
             __unchecked: (),
             start: Vector<Int>.Index(_unchecked: .zero),
-            end: Vector<Int>.Index(_unchecked: Ordinal(count)),
-            transform: { transform(offset + Swift.Int(bitPattern: $0)) }
+            end: Vector<Int>.Index(_unchecked: Ordinal::Ordinal(count)),
+            transform: { transform(offset + Swift.Int(bitPattern: $0.position.rawValue)) }
         )
     }
 }

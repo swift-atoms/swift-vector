@@ -1,3 +1,10 @@
+public import Ordinal
+public import Ordinal_Error
+public import Ordinal_Protocol
+public import Ordinal_Predecessor
+public import Ordinal_Retreat
+public import Tagged
+
 extension Vector.Reversed {
 
     public struct Prefix: ~Copyable {
@@ -30,7 +37,7 @@ extension Vector.Reversed.Prefix where Bound: Copyable {
         guard !base.isEmpty else { return result }
 
         let initial: Vector<Bound>.Index
-        do throws(Ordinal.Error) {
+        do throws(Ordinal::Ordinal.Error) {
             initial = try base.end.predecessor.exact()
         } catch {
             return result
@@ -42,7 +49,7 @@ extension Vector.Reversed.Prefix where Bound: Copyable {
             result.append(element)
             if i == base.start { break }
 
-            do throws(Ordinal.Error) {
+            do throws(Ordinal::Ordinal.Error) {
                 i = try i.predecessor.exact()
             } catch {
                 break

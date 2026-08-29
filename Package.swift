@@ -36,11 +36,19 @@ let package = Package(
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-atoms/swift-sequence.git",
+            url: "https://github.com/swift-atoms/swift-cardinal.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-atoms/swift-iterator.git",
+            url: "https://github.com/swift-atoms/swift-tagged.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-atoms/swift-ordinal.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-atoms/swift-affine.git",
             branch: "main"
         ),
     ],
@@ -51,17 +59,37 @@ let package = Package(
             dependencies: [
                 .product(name: "Index", package: "swift-index"),
                 .product(name: "Property", package: "swift-property"),
-                .product(name: "Sequence", package: "swift-sequence"),
-                .product(name: "Iterable", package: "swift-iterator"),
-                .product(name: "Iterator Chunk", package: "swift-iterator"),
-                .product(name: "Iterator Witness", package: "swift-iterator"),
+                .product(name: "Property Inout", package: "swift-property"),
+                .product(name: "Cardinal", package: "swift-cardinal"),
+                .product(name: "Cardinal Carrier", package: "swift-cardinal"),
+                .product(name: "Tagged", package: "swift-tagged"),
+                .product(name: "Ordinal", package: "swift-ordinal"),
+                .product(name: "Ordinal Error", package: "swift-ordinal"),
+                .product(name: "Ordinal Protocol", package: "swift-ordinal"),
+                .product(name: "Ordinal Cardinal", package: "swift-ordinal"),
+                .product(name: "Ordinal Advance", package: "swift-ordinal"),
+                .product(name: "Ordinal Retreat", package: "swift-ordinal"),
+                .product(name: "Ordinal Predecessor", package: "swift-ordinal"),
+                .product(name: "Ordinal Distance", package: "swift-ordinal"),
+                .product(name: "Ordinal Tagged", package: "swift-ordinal"),
+                .product(name: "Affine Arithmetic", package: "swift-affine"),
+                .product(name: "Affine Tagged", package: "swift-affine"),
             ]
         ),
 
         .target(
             name: "Vector Standard Library Integration",
             dependencies: [
-                .target(name: "Vector")
+                .product(name: "Index", package: "swift-index"),
+                .product(
+                    name: "Cardinal Standard Library Integration",
+                    package: "swift-cardinal"
+                ),
+                .product(name: "Ordinal Protocol", package: "swift-ordinal"),
+                .product(
+                    name: "Ordinal Standard Library Integration",
+                    package: "swift-ordinal"
+                ),
             ]
         ),
 
@@ -70,6 +98,10 @@ let package = Package(
             dependencies: [
                 .target(name: "Vector"),
                 .product(name: "Index Test Support", package: "swift-index"),
+                .product(name: "Ordinal", package: "swift-ordinal"),
+                .product(name: "Ordinal Protocol", package: "swift-ordinal"),
+                .product(name: "Ordinal Tagged", package: "swift-ordinal"),
+                .product(name: "Tagged", package: "swift-tagged"),
             ],
             path: "Tests/Support"
         ),
@@ -78,6 +110,17 @@ let package = Package(
             dependencies: [
                 .target(name: "Vector"),
                 .target(name: "Vector Test Support"),
+                .product(name: "Cardinal", package: "swift-cardinal"),
+                .product(name: "Cardinal Carrier", package: "swift-cardinal"),
+                .product(name: "Cardinal Tagged", package: "swift-cardinal"),
+                .product(name: "Tagged", package: "swift-tagged"),
+                .product(
+                    name: "Tagged Standard Library Integration",
+                    package: "swift-tagged"
+                ),
+                .product(name: "Ordinal Protocol", package: "swift-ordinal"),
+                .product(name: "Ordinal Distance", package: "swift-ordinal"),
+                .product(name: "Ordinal Tagged", package: "swift-ordinal"),
             ]
         ),
     ],

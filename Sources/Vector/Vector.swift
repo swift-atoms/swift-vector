@@ -1,9 +1,19 @@
+public import Cardinal
+public import Cardinal_Carrier
 public import Index
-import Property
+public import Ordinal
+public import Ordinal_Distance
+public import Ordinal_Error
+public import Ordinal_Predecessor
+public import Ordinal_Protocol
+public import Ordinal_Tagged
+public import Property_Inout
+public import Tagged
+internal import Property
 
 public struct Vector<Bound: ~Copyable> {
 
-    public typealias Index = Index.Index<Vector<Bound>>
+    public typealias Index = Index::Index<Vector<Bound>>
 
     public enum ForEach {}
 
@@ -100,7 +110,7 @@ public struct Vector<Bound: ~Copyable> {
                     self.exhausted = true
                 } else {
 
-                    do throws(Ordinal.Error) {
+                    do throws(Ordinal::Ordinal.Error) {
                         self.current = try end.predecessor.exact()
                         self.exhausted = false
                     } catch {
@@ -120,7 +130,7 @@ public struct Vector<Bound: ~Copyable> {
                     exhausted = true
                 } else {
 
-                    do throws(Ordinal.Error) {
+                    do throws(Ordinal::Ordinal.Error) {
                         current = try current.predecessor.exact()
                     } catch {
                         exhausted = true
@@ -154,7 +164,7 @@ public struct Vector<Bound: ~Copyable> {
             self.start = start
             self.end = end
 
-            do throws(Ordinal.Error) {
+            do throws(Ordinal::Ordinal.Error) {
                 self._count = Index.Count(try start.position.distance.forward(to: end.position))
             } catch {
                 fatalError("invariant violation: \(error)")
@@ -177,7 +187,7 @@ public struct Vector<Bound: ~Copyable> {
             guard !isEmpty else { return }
 
             let initial: Index
-            do throws(Ordinal.Error) {
+            do throws(Ordinal::Ordinal.Error) {
                 initial = try end.predecessor.exact()
             } catch {
                 return
@@ -188,7 +198,7 @@ public struct Vector<Bound: ~Copyable> {
                 try body(bound)
                 if i == start { break }
 
-                do throws(Ordinal.Error) {
+                do throws(Ordinal::Ordinal.Error) {
                     i = try i.predecessor.exact()
                 } catch {
                     break
@@ -201,7 +211,7 @@ public struct Vector<Bound: ~Copyable> {
             guard !isEmpty else { return }
 
             let initial: Index
-            do throws(Ordinal.Error) {
+            do throws(Ordinal::Ordinal.Error) {
                 initial = try end.predecessor.exact()
             } catch {
                 return
@@ -211,7 +221,7 @@ public struct Vector<Bound: ~Copyable> {
                 body(transform(i))
                 if i == start { break }
 
-                do throws(Ordinal.Error) {
+                do throws(Ordinal::Ordinal.Error) {
                     i = try i.predecessor.exact()
                 } catch {
                     break
@@ -261,7 +271,7 @@ public struct Vector<Bound: ~Copyable> {
         self.start = start
         self.end = end
 
-        do throws(Ordinal.Error) {
+        do throws(Ordinal::Ordinal.Error) {
             self._count = Index.Count(try start.position.distance.forward(to: end.position))
         } catch {
             fatalError("invariant violation: \(error)")
@@ -279,7 +289,7 @@ public struct Vector<Bound: ~Copyable> {
         self.start = start
         self.end = end
 
-        do throws(Ordinal.Error) {
+        do throws(Ordinal::Ordinal.Error) {
             self._count = Index.Count(try start.position.distance.forward(to: end.position))
         } catch {
             fatalError("invariant violation: \(error)")

@@ -1,4 +1,4 @@
-public import Property
+public import Property_Inout
 
 extension Property.Inout where Base: ~Copyable {
 

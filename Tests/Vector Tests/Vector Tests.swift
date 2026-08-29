@@ -1,3 +1,11 @@
+import Cardinal
+import Cardinal_Carrier
+import Cardinal_Tagged
+import Ordinal_Distance
+import Ordinal_Protocol
+import Ordinal_Tagged
+import Tagged
+import Tagged_Standard_Library_Integration
 import Testing
 import Vector_Test_Support
 
@@ -64,42 +72,6 @@ extension VectorTests.Unit {
     }
 
     @Test
-    func `satisfies.all returns true when all match`() throws(VectorTestError) {
-        var vector = try Vector(0..<10) { $0 }
-        #expect(vector.satisfies.all { $0 >= 0 })
-    }
-
-    @Test
-    func `satisfies.all returns false when one doesn't match`() throws(VectorTestError) {
-        var vector = try Vector(0..<10) { $0 }
-        #expect(!vector.satisfies.all { $0 > 5 })
-    }
-
-    @Test
-    func `satisfies.any returns true when one matches`() throws(VectorTestError) {
-        var vector = try Vector(0..<10) { $0 }
-        #expect(vector.satisfies.any { $0 == 5 })
-    }
-
-    @Test
-    func `satisfies.any returns false when none match`() throws(VectorTestError) {
-        var vector = try Vector(0..<10) { $0 }
-        #expect(!vector.satisfies.any { $0 > 100 })
-    }
-
-    @Test
-    func `satisfies.none returns true when none match`() throws(VectorTestError) {
-        var vector = try Vector(0..<10) { $0 }
-        #expect(vector.satisfies.none { $0 < 0 })
-    }
-
-    @Test
-    func `satisfies.none returns false when one matches`() throws(VectorTestError) {
-        var vector = try Vector(0..<10) { $0 }
-        #expect(!vector.satisfies.none { $0 == 5 })
-    }
-
-    @Test
     func `first returns matching element`() throws(VectorTestError) {
         var vector = try Vector(0..<10) { $0 * 2 }
         let result = vector.first { $0 > 10 }
@@ -118,20 +90,6 @@ extension VectorTests.Unit {
         let vector = try Vector(0..<10) { $0 }
         let evenCount = vector.count(where: { $0 % 2 == 0 })
         #expect(evenCount == 5)
-    }
-
-    @Test
-    func `reduce.into accumulates correctly`() throws(VectorTestError) {
-        var vector = try Vector(1..<6) { $0 }
-        let sum = vector.reduce.into(0) { $0 += $1 }
-        #expect(sum == 15)
-    }
-
-    @Test
-    func `reduce.from combines correctly`() throws(VectorTestError) {
-        var vector = try Vector(1..<5) { $0 }
-        let product = vector.reduce.from(1) { $0 * $1 }
-        #expect(product == 24)
     }
 
     @Test
@@ -155,18 +113,6 @@ extension VectorTests.`Edge Case` {
         var count = 0
         vector.forEach { _ in count += 1 }
         #expect(count == 0)
-    }
-
-    @Test
-    func `empty vector satisfies.all returns true`() throws(VectorTestError) {
-        var vector = try Vector(0..<0) { $0 }
-        #expect(vector.satisfies.all { _ in false })
-    }
-
-    @Test
-    func `empty vector satisfies.any returns false`() throws(VectorTestError) {
-        var vector = try Vector(0..<0) { $0 }
-        #expect(!vector.satisfies.any { _ in true })
     }
 
     @Test
@@ -240,13 +186,6 @@ extension VectorReversedTests.Unit {
     }
 
     @Test
-    func `reversed satisfies.all works correctly`() throws(VectorTestError) {
-        let vector = try Vector(0..<10) { $0 }
-        var reversed = vector.reversed()
-        #expect(reversed.satisfies.all { $0 >= 0 && $0 < 10 })
-    }
-
-    @Test
     func `reversed first finds from end`() throws(VectorTestError) {
         let vector = try Vector(0..<10) { $0 }
         var reversed = vector.reversed()
@@ -261,17 +200,6 @@ extension VectorReversedTests.Unit {
         #expect(reversed.count(where: { $0 % 2 == 0 }) == 5)
     }
 
-    @Test
-    func `reversed reduce.into accumulates in reverse order`() throws(VectorTestError) {
-        let vector = try Vector(1..<4) { $0 }
-        var reversed = vector.reversed()
-        var order: [Int] = []
-        _ = reversed.reduce.into(0) { acc, val in
-            order.append(val)
-            acc += val
-        }
-        #expect(order == [3, 2, 1])
-    }
 }
 
 extension VectorReversedTests.`Edge Case` {
@@ -407,47 +335,6 @@ extension VectorInvariantTests.Consistency {
     }
 
     @Test
-    func `INVARIANT: satisfies.any(p) == !satisfies.none(p)`() throws(VectorTestError) {
-        for size in [0, 1, 5, 20] {
-
-            var vector1 = try Vector(0..<size) { $0 }
-            var vector2 = try Vector(0..<size) { $0 }
-            let anyEven = vector1.satisfies.any { $0 % 2 == 0 }
-            let noneEven = vector2.satisfies.none { $0 % 2 == 0 }
-            #expect(
-                anyEven == !noneEven,
-                "Size \(size): any(even) = \(anyEven), none(even) = \(noneEven)"
-            )
-
-            var vector3 = try Vector(0..<size) { $0 }
-            var vector4 = try Vector(0..<size) { $0 }
-            let anyNegative = vector3.satisfies.any { $0 < 0 }
-            let noneNegative = vector4.satisfies.none { $0 < 0 }
-            #expect(anyNegative == !noneNegative)
-        }
-    }
-
-    @Test
-    func `INVARIANT: satisfies.all(p) implies satisfies.any(p) for non-empty`()
-        throws(VectorTestError)
-    {
-        for size in [1, 5, 20] {
-            var vector1 = try Vector(0..<size) { $0 }
-            var vector2 = try Vector(0..<size) { $0 }
-
-            let allNonNegative = vector1.satisfies.all { $0 >= 0 }
-            let anyNonNegative = vector2.satisfies.any { $0 >= 0 }
-
-            if allNonNegative {
-                #expect(
-                    anyNonNegative,
-                    "Size \(size): all(>=0) is true but any(>=0) is false"
-                )
-            }
-        }
-    }
-
-    @Test
     func `INVARIANT: count(where: { true }) == count property`() throws(VectorTestError) {
         for size in [0, 1, 5, 100] {
             let vector = try Vector(0..<size) { $0 }
@@ -469,24 +356,6 @@ extension VectorInvariantTests.Consistency {
                 "Size \(size): count(where: false) = \(countWhere)"
             )
         }
-    }
-
-    @Test
-    func `INVARIANT: reduce.into(initial) { } returns initial for empty vector`()
-        throws(VectorTestError)
-    {
-        var vector = try Vector(0..<0) { $0 }
-        let result = vector.reduce.into(42) { acc, _ in acc += 1 }
-        #expect(result == 42)
-    }
-
-    @Test
-    func `INVARIANT: reduce.from(initial) { } returns initial for empty vector`()
-        throws(VectorTestError)
-    {
-        var vector = try Vector(0..<0) { $0 }
-        let result = vector.reduce.from(42) { _, _ in 0 }
-        #expect(result == 42)
     }
 
     @Test
@@ -590,23 +459,6 @@ extension VectorInvariantTests.Symmetry {
     }
 
     @Test
-    func `INVARIANT: reduce forward and reversed give same sum`() throws(VectorTestError) {
-        for size in [0, 1, 5, 20] {
-            var vector1 = try Vector(0..<size) { $0 }
-            let vector2 = try Vector(0..<size) { $0 }
-
-            let forwardSum = vector1.reduce.into(0) { $0 += $1 }
-            var reversed = vector2.reversed()
-            let backwardSum = reversed.reduce.into(0) { $0 += $1 }
-
-            #expect(
-                forwardSum == backwardSum,
-                "Size \(size): forward sum \(forwardSum) != backward sum \(backwardSum)"
-            )
-        }
-    }
-
-    @Test
     func `INVARIANT: count(where:) same for forward and reversed`() throws(VectorTestError) {
         for size in [0, 1, 5, 20] {
             let vector1 = try Vector(0..<size) { $0 }
@@ -619,19 +471,6 @@ extension VectorInvariantTests.Symmetry {
         }
     }
 
-    @Test
-    func `INVARIANT: satisfies.all same for forward and reversed`() throws(VectorTestError) {
-        for size in [0, 1, 5, 20] {
-            var vector1 = try Vector(0..<size) { $0 }
-            let vector2 = try Vector(0..<size) { $0 }
-
-            let forwardAll = vector1.satisfies.all { $0 >= 0 }
-            var reversed = vector2.reversed()
-            let backwardAll = reversed.satisfies.all { $0 >= 0 }
-
-            #expect(forwardAll == backwardAll)
-        }
-    }
 }
 
 extension VectorInvariantTests.Boundaries {
@@ -734,56 +573,6 @@ extension VectorStressTests.Stress {
         }
     }
 
-    @Test
-    func `STRESS: Alternating forward/reversed operations`() throws(VectorTestError) {
-        for size in [1, 5, 10, 50] {
-            var forwardSum = 0
-            var reversedSum = 0
-
-            for i in 0..<10 {
-                if i % 2 == 0 {
-                    var vector = try Vector(0..<size) { $0 }
-                    forwardSum += vector.reduce.into(0) { $0 += $1 }
-                } else {
-                    let vector = try Vector(0..<size) { $0 }
-                    var reversed = vector.reversed()
-                    reversedSum += reversed.reduce.into(0) { $0 += $1 }
-                }
-            }
-
-            #expect(
-                forwardSum == reversedSum,
-                "Size \(size): forward \(forwardSum) != reversed \(reversedSum)"
-            )
-        }
-    }
-
-    @Test
-    func `STRESS: Predicate operations on various sizes`() throws(VectorTestError) {
-        for size in [0, 1, 2, 10, 100, 500] {
-            let vector1 = try Vector(0..<size) { $0 }
-            var vector2 = try Vector(0..<size) { $0 }
-            var vector3 = try Vector(0..<size) { $0 }
-
-            let countEven = vector1.count(where: { $0 % 2 == 0 })
-            let anyEven = vector2.satisfies.any { $0 % 2 == 0 }
-            let allEven = vector3.satisfies.all { $0 % 2 == 0 }
-
-            if size == 0 {
-                #expect(countEven == 0)
-                #expect(!anyEven)
-                #expect(allEven)
-            } else if size == 1 {
-                #expect(countEven == 1)
-                #expect(anyEven)
-                #expect(allEven)
-            } else {
-                #expect(countEven > 0)
-                #expect(anyEven)
-                #expect(!allEven)
-            }
-        }
-    }
 }
 
 enum VectorDropPrefixTests {
