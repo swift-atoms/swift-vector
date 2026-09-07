@@ -1,7 +1,7 @@
 import Vector
 import Testing
 
-@Suite struct `Vectors obey mathematical laws` {
+@Suite struct `Vector operations preserve arithmetic relationships and evaluation order` {
     @Test func `Dot products preserve scalar rounding order`() {
         let values = Vector<3, Double>([1e16, 1, -1e16])
         #expect(values.dot(.init(repeating: 1)) == 0)
@@ -22,7 +22,7 @@ import Testing
         #expect(visited == [1, 2])
     }
 
-    @Test func `Additive identity and inverse`() {
+    @Test func `Vector addition preserves identity inverse and repeated scaling`() {
         let value = Vector<3, Int>([2, -3, 7])
         #expect(value + .zero == value)
         #expect(value - value == .zero)
