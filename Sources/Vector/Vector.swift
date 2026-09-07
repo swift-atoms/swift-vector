@@ -1,5 +1,3 @@
-/// A fixed-dimensional mathematical vector. Its dimension is part of its type.
-/// Component arithmetic follows the scalar's semantics, including overflow.
 public struct Vector<let N: Int, Scalar> {
     public var components: InlineArray<N, Scalar>
 
