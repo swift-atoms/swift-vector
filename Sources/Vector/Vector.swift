@@ -21,30 +21,7 @@ public struct Vector<let N: Int, Scalar> {
     }
 }
 
-extension Vector: Sendable where Scalar: Sendable {}
-
-extension Vector: Equatable where Scalar: Equatable {
-    public static func == (lhs: Self, rhs: Self) -> Bool {
-        for i in 0..<N where lhs[i] != rhs[i] { return false }
-        return true
-    }
-}
-
-extension Vector: Hashable where Scalar: Hashable {
-    public func hash(into hasher: inout Hasher) {
-        for i in 0..<N { hasher.combine(self[i]) }
-    }
-}
-
-extension Vector: AdditiveArithmetic where Scalar: AdditiveArithmetic {
-    public static var zero: Self { Self(repeating: .zero) }
-    public static func + (lhs: Self, rhs: Self) -> Self {
-        Self(InlineArray { lhs[$0] + rhs[$0] })
-    }
-    public static func - (lhs: Self, rhs: Self) -> Self {
-        Self(InlineArray { lhs[$0] - rhs[$0] })
-    }
-}
+extension Vector: Swift.Sendable where Scalar: Swift.Sendable {}
 
 extension Vector where Scalar: Numeric {
     public func scaled(by factor: Scalar) -> Self { map { $0 * factor } }

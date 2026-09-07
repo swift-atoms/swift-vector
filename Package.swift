@@ -5,19 +5,28 @@ let package = Package(
     platforms: [.macOS(.v27), .iOS(.v27), .tvOS(.v27), .watchOS(.v27), .visionOS(.v27)],
     products: [
         .library(name: "Vector", targets: ["Vector"]),
-        .library(name: "Vector Standard Library Integration", targets: ["Vector Standard Library Integration"]),
-        .library(name: "Vector Foundation Library Integration", targets: ["Vector Foundation Library Integration"]),
+
+        .library(name: "Vector Foundation Integration", targets: ["Vector Foundation Integration"]),
         .library(name: "Vector Test Support", targets: ["Vector Test Support"]),
     ],
     dependencies: [
 
     ],
     targets: [
-        .target(name: "Vector", dependencies: [], path: "Sources/Vector"),
-        .target(name: "Vector Standard Library Integration", dependencies: ["Vector"], path: "Sources/Vector Standard Library Integration"),
-        .target(name: "Vector Foundation Library Integration", dependencies: ["Vector", "Vector Standard Library Integration"], path: "Sources/Vector Foundation Library Integration"),
-        .target(name: "Vector Test Support", dependencies: ["Vector"], path: "Tests/Support"),
-        .testTarget(name: "Vector Tests", dependencies: ["Vector", "Vector Test Support", "Vector Standard Library Integration", "Vector Foundation Library Integration"], path: "Tests/Vector Tests"),
+        .target(name: "Vector", dependencies: [
+            ], path: "Sources/Vector"),
+        
+        .target(name: "Vector Foundation Integration", dependencies: [
+                .target(name: "Vector"),
+            ], path: "Sources/Vector Foundation Integration"),
+        .target(name: "Vector Test Support", dependencies: [
+                .target(name: "Vector"),
+            ], path: "Tests/Support"),
+        .testTarget(name: "Vector Tests", dependencies: [
+                .target(name: "Vector"),
+                .target(name: "Vector Test Support"),
+                .target(name: "Vector Foundation Integration"),
+            ], path: "Tests/Vector Tests"),
     ],
     swiftLanguageModes: [.v6]
 )
