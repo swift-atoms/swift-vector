@@ -1,6 +1,3 @@
-// Named components are conveniences for one, two, and three dimensions.
-// They do not select a coordinate frame or add an affine interpretation.
-
 extension Vector where N == 1 {
     public init(x: Scalar) {
         self.init([x])
