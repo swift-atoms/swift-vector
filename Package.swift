@@ -23,7 +23,7 @@ let package = Package(
     targets: [
         .target(name: "Vector", dependencies: [
                 .product(name: "Shear", package: "swift-shear", condition: .when(traits: ["Shear"])),
-                .product(name: "Iterator", package: "swift-iterator", condition: .when(traits: ["Iterator"])),
+                .product(name: "Iterator", package: "swift-iterator", condition: .when(traits: ["Iterator", "Sequence"])),
                 .product(name: "Sequence", package: "swift-sequence", condition: .when(traits: ["Sequence"])),
                 .product(name: "Cardinal", package: "swift-cardinal", condition: .when(traits: ["Sequence"])),
             ], path: "Sources/Vector"),
@@ -47,7 +47,7 @@ let package = Package(
             ],
             path: "Tests/Vector Shear Tests"
         ),
-        .testTarget(name: "Vector Iterator Integration Tests", dependencies: [.target(name: "Vector"), .target(name: "Vector Test Support"), .product(name: "Iterator", package: "swift-iterator", condition: .when(traits: ["Iterator"]))], path: "Tests/Vector Iterator Integration Tests"),
+        .testTarget(name: "Vector Iterator Integration Tests", dependencies: [.target(name: "Vector"), .target(name: "Vector Test Support"), .product(name: "Iterator", package: "swift-iterator", condition: .when(traits: ["Iterator", "Sequence"]))], path: "Tests/Vector Iterator Integration Tests"),
         .testTarget(name: "Vector Sequence Integration Tests", dependencies: [.target(name: "Vector"), .target(name: "Vector Test Support"), .product(name: "Sequence", package: "swift-sequence", condition: .when(traits: ["Sequence"])), .product(name: "Cardinal", package: "swift-cardinal", condition: .when(traits: ["Sequence"]))], path: "Tests/Vector Sequence Integration Tests"),
     ],
     swiftLanguageModes: [.v6]
