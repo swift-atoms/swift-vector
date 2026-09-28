@@ -38,7 +38,7 @@ import Testing
     @Test func `Empty vector does not evaluate mapping`() {
         var calls = 0
         let empty = Vector<0, Int>(repeating: 0)
-        let mapped = empty.map { value in calls += 1; return value }
+        let mapped: Vector<0, Int> = empty.map { value in calls += 1; return value }
         #expect(calls == 0)
         #expect(mapped.dot(empty) == 0)
     }
