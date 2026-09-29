@@ -2,7 +2,6 @@
 public import Iterator
 
 extension Vector {
-    /// An owning snapshot of exactly N copyable scalar values.
     public struct Iterator: Iterator::Iterator.`Protocol` {
         public typealias Element = Scalar
         public typealias Failure = Never
@@ -23,10 +22,8 @@ extension Vector {
         }
     }
 
-    /// Consumes this value; passing a copy leaves the original available.
     public consuming func makeIterator() -> Iterator { Iterator(self, reverse: false) }
 
-    /// A reverse-order snapshot; it does not borrow the source's lifetime.
     public struct Reversed {
         public typealias Iterator = Vector<N, Scalar>.Iterator
         fileprivate let vector: Vector<N, Scalar>
