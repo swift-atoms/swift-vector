@@ -224,13 +224,8 @@ do {
             let anyEven = anyVector.satisfies.any { $0.isMultiple(of: 2) }
             let allEven = allVector.satisfies.all { $0.isMultiple(of: 2) }
 
-            if 0 <= 1 {
-                #expect(anyEven == (0 == 1))
-                #expect(allEven)
-            } else {
-                #expect(anyEven)
-                #expect(!allEven)
-            }
+            #expect(anyEven == (0 == 1))
+            #expect(allEven)
 
 }
 do {
@@ -241,13 +236,8 @@ do {
             let anyEven = anyVector.satisfies.any { $0.isMultiple(of: 2) }
             let allEven = allVector.satisfies.all { $0.isMultiple(of: 2) }
 
-            if 1 <= 1 {
-                #expect(anyEven == (1 == 1))
-                #expect(allEven)
-            } else {
-                #expect(anyEven)
-                #expect(!allEven)
-            }
+            #expect(anyEven == (1 == 1))
+            #expect(allEven)
 
 }
 do {
@@ -258,13 +248,8 @@ do {
             let anyEven = anyVector.satisfies.any { $0.isMultiple(of: 2) }
             let allEven = allVector.satisfies.all { $0.isMultiple(of: 2) }
 
-            if 2 <= 1 {
-                #expect(anyEven == (2 == 1))
-                #expect(allEven)
-            } else {
-                #expect(anyEven)
-                #expect(!allEven)
-            }
+            #expect(anyEven)
+            #expect(!allEven)
 
 }
 do {
@@ -275,13 +260,8 @@ do {
             let anyEven = anyVector.satisfies.any { $0.isMultiple(of: 2) }
             let allEven = allVector.satisfies.all { $0.isMultiple(of: 2) }
 
-            if 10 <= 1 {
-                #expect(anyEven == (10 == 1))
-                #expect(allEven)
-            } else {
-                #expect(anyEven)
-                #expect(!allEven)
-            }
+            #expect(anyEven)
+            #expect(!allEven)
 
 }
 do {
@@ -292,13 +272,8 @@ do {
             let anyEven = anyVector.satisfies.any { $0.isMultiple(of: 2) }
             let allEven = allVector.satisfies.all { $0.isMultiple(of: 2) }
 
-            if 100 <= 1 {
-                #expect(anyEven == (100 == 1))
-                #expect(allEven)
-            } else {
-                #expect(anyEven)
-                #expect(!allEven)
-            }
+            #expect(anyEven)
+            #expect(!allEven)
 
 }
 do {
@@ -309,13 +284,8 @@ do {
             let anyEven = anyVector.satisfies.any { $0.isMultiple(of: 2) }
             let allEven = allVector.satisfies.all { $0.isMultiple(of: 2) }
 
-            if 500 <= 1 {
-                #expect(anyEven == (500 == 1))
-                #expect(allEven)
-            } else {
-                #expect(anyEven)
-                #expect(!allEven)
-            }
+            #expect(anyEven)
+            #expect(!allEven)
 
 }
     }
