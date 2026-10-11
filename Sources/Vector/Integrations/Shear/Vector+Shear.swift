@@ -3,7 +3,7 @@
 
 extension Shear {
 
-    public enum ApplicationError: Swift.Error, Equatable, Sendable {
+    public enum ApplicationError: Swift::Error, Equatable, Sendable {
         case nonfiniteCoordinate
     }
 

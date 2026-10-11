@@ -10,7 +10,7 @@ import Testing
     }
 
     @Test func `Mapping stops at the first thrown error`() {
-        enum Failure: Swift.Error { case stopped }
+        enum Failure: Swift::Error { case stopped }
         var visited: [Int] = []
         #expect(throws: Failure.stopped) {
             try Vector<3, Int>([1, 2, 3]).map { value in

@@ -6,7 +6,7 @@ public struct Vector<let N: Int, Scalar> {
     }
 }
 
-extension Vector: Swift.Sendable where Scalar: Swift.Sendable {}
+extension Vector: Swift::Sendable where Scalar: Swift::Sendable {}
 
 extension Vector {
     public init(repeating value: Scalar) {

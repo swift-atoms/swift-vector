@@ -37,7 +37,6 @@ let package = Package(
         .testTarget(name: "Vector Tests", dependencies: [
                 .target(name: "Vector"),
                 .target(name: "Vector Test Support"),
-                .target(name: "Vector Foundation Integration"),
             ], path: "Tests/Vector Tests"),
         .testTarget(
             name: "Vector Shear Tests",
@@ -53,7 +52,7 @@ let package = Package(
     swiftLanguageModes: [.v6]
 )
 
-for target in package.targets where ![.system, .binary, .plugin].contains(target.type) {
+for target in package.targets where ![.system, .binary, .plugin, .macro].contains(target.type) {
     target.swiftSettings = (target.swiftSettings ?? []) + [
         .strictMemorySafety(),
         .enableUpcomingFeature("ExistentialAny"),
