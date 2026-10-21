@@ -44,7 +44,8 @@ struct `Vector coding preserves static dimensions` {
     func `Decoding does not require an encodable scalar`() throws {
         struct Value: Decodable { let text: String }
         let value = try JSONDecoder().decode(
-            Vector<1, Value>.self, from: Data("[{\"text\":\"a\"}]".utf8)
+            Vector<1, Value>.self,
+            from: Data("[{\"text\":\"a\"}]".utf8)
         )
         #expect(value[0].text == "a")
     }

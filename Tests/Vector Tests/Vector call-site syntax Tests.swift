@@ -1,5 +1,5 @@
-import Vector
 import Testing
+import Vector
 
 @Suite struct `Vector construction reads naturally at the call site` {
     @Test func `Named components infer one dimensional vector storage`() {
