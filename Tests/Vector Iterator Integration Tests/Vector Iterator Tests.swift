@@ -4,34 +4,38 @@
     import Vector
     import Vector_Test_Support
 
-    @Suite
-    struct `Vector × Iterator` {
+enum `Vector Iterator Tests` {}
 
-        @Test
-        func `Vector Iterator conforms and preserves forward order`() {
-            let result = Self.materialize(Vector<5, Int>(InlineArray { $0 + 0 }).makeIterator())
+extension `Vector Iterator Tests` {
+        @Suite
+        struct `Vector × Iterator` {
 
-            #expect(result == [0, 1, 2, 3, 4])
-        }
+            @Test
+            func `Vector Iterator conforms and preserves forward order`() {
+                let result = Self.materialize(Vector<5, Int>(InlineArray { $0 + 0 }).makeIterator())
 
-        @Test
-        func `reversed Vector Iterator conforms and preserves reverse order`() {
-            let result = Self.materialize(Vector<5, Int>(InlineArray { $0 + 0 }).reversed().makeIterator())
-
-            #expect(result == [4, 3, 2, 1, 0])
-        }
-
-        private static func materialize<I: Iterator::Iterator.`Protocol`>(
-            _ source: consuming I
-        ) -> [I.Element]
-        where I.Element: Copyable & Escapable, I.Failure == Never {
-            var source = source
-            var result: [I.Element] = []
-            while let element = source.next() {
-                result.append(element)
+                #expect(result == [0, 1, 2, 3, 4])
             }
-            return result
+
+            @Test
+            func `reversed Vector Iterator conforms and preserves reverse order`() {
+                let result = Self.materialize(Vector<5, Int>(InlineArray { $0 + 0 }).reversed().makeIterator())
+
+                #expect(result == [4, 3, 2, 1, 0])
+            }
+
+            private static func materialize<I: Iterator::Iterator.`Protocol`>(
+                _ source: consuming I
+            ) -> [I.Element]
+            where I.Element: Copyable & Escapable, I.Failure == Never {
+                var source = source
+                var result: [I.Element] = []
+                while let element = source.next() {
+                    result.append(element)
+                }
+                return result
+            }
         }
-    }
+}
 
 #endif
