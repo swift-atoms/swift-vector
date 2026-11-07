@@ -399,7 +399,7 @@
                 var forwardSum = 0
                 var reversedSum = 0
 
-                for iteration in 0..<10 {
+                (0..<10).forEach { iteration in
                     if iteration.isMultiple(of: 2) {
                         var vector = Vector<1, Int>(InlineArray { $0 + 0 })
                         forwardSum += vector.reduce.into(0) { $0 += $1 }
@@ -418,7 +418,7 @@
                 var forwardSum = 0
                 var reversedSum = 0
 
-                for iteration in 0..<10 {
+                (0..<10).forEach { iteration in
                     if iteration.isMultiple(of: 2) {
                         var vector = Vector<5, Int>(InlineArray { $0 + 0 })
                         forwardSum += vector.reduce.into(0) { $0 += $1 }
@@ -437,7 +437,7 @@
                 var forwardSum = 0
                 var reversedSum = 0
 
-                for iteration in 0..<10 {
+                (0..<10).forEach { iteration in
                     if iteration.isMultiple(of: 2) {
                         var vector = Vector<10, Int>(InlineArray { $0 + 0 })
                         forwardSum += vector.reduce.into(0) { $0 += $1 }
@@ -456,7 +456,7 @@
                 var forwardSum = 0
                 var reversedSum = 0
 
-                for iteration in 0..<10 {
+                (0..<10).forEach { iteration in
                     if iteration.isMultiple(of: 2) {
                         var vector = Vector<50, Int>(InlineArray { $0 + 0 })
                         forwardSum += vector.reduce.into(0) { $0 += $1 }

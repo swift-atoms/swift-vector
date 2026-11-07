@@ -28,7 +28,7 @@ extension Vector where Scalar: Numeric {
 
     public func dot(_ other: Self) -> Scalar {
         var result: Scalar = .zero
-        for i in 0..<N { result += self[i] * other[i] }
+        (0..<N).forEach { i in result += self[i] * other[i] }
         return result
     }
 }
