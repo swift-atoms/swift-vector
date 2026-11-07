@@ -4,8 +4,8 @@
     import Vector
     import Vector_Test_Support
 
-    @Suite("Vector × Iterator")
-    struct Vector_Iterator_Tests {
+    @Suite
+    struct `Vector × Iterator` {
 
         @Test
         func `Vector Iterator conforms and preserves forward order`() {

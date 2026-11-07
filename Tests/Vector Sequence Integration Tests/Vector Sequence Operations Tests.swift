@@ -4,8 +4,8 @@
     import Vector
     import Vector_Test_Support
 
-    @Suite("Vector × Sequence terminal operations")
-    struct Vector_Sequence_Operations_Tests {
+    @Suite
+    struct `Vector × Sequence terminal operations` {
 
         @Test
         func `satisfies all reports whether every element matches`() {

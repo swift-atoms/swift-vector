@@ -5,8 +5,8 @@
     import Vector
     import Vector_Test_Support
 
-    @Suite("Vector × Sequence")
-    struct Vector_Sequence_Tests {
+    @Suite
+    struct `Vector × Sequence` {
 
         static func materialize<S: Sequenceable>(
             _ sequence: consuming S
