@@ -4,9 +4,9 @@
     import Vector
     import Vector_Test_Support
 
-enum `Vector Iterator Tests` {}
+    enum `Vector Iterator Tests` {}
 
-extension `Vector Iterator Tests` {
+    extension `Vector Iterator Tests` {
         @Suite
         struct `Vector × Iterator` {
 
@@ -36,6 +36,6 @@ extension `Vector Iterator Tests` {
                 return result
             }
         }
-}
+    }
 
 #endif

@@ -2,9 +2,9 @@
     import Vector
     import Testing
 
-enum `Vector Shear Tests` {}
+    enum `Vector Shear Tests` {}
 
-extension `Vector Shear Tests` {
+    extension `Vector Shear Tests` {
         @Suite struct `Shear vector application` {
             @Test func `Only the selected target changes and the inverse restores exact samples`() throws {
                 let shear = try Shear<3, Double>(target: .primary, source: .tertiary, factor: Scale(2))
@@ -30,9 +30,9 @@ extension `Vector Shear Tests` {
                 #expect(try shear.applied(to: vector) == vector)
             }
         }
-}
+    }
 
-extension `Vector Shear Tests` {
+    extension `Vector Shear Tests` {
         @Suite struct `Shear application boundaries` {
             @Test(arguments: [Double.infinity, -Double.infinity, Double.nan])
             func `Every nonfinite coordinate is rejected including unchanged coordinates`(value: Double) throws {
@@ -61,5 +61,5 @@ extension `Vector Shear Tests` {
                 #expect(vector[3] == 2)
             }
         }
-}
+    }
 #endif

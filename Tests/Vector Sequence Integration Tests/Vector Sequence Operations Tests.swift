@@ -4,9 +4,9 @@
     import Vector
     import Vector_Test_Support
 
-enum `Vector Sequence Operations Tests` {}
+    enum `Vector Sequence Operations Tests` {}
 
-extension `Vector Sequence Operations Tests` {
+    extension `Vector Sequence Operations Tests` {
         @Suite
         struct `Vector × Sequence terminal operations` {
 
@@ -515,6 +515,6 @@ extension `Vector Sequence Operations Tests` {
                 return true
             }
         }
-}
+    }
 
 #endif

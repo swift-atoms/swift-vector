@@ -5,9 +5,9 @@
     import Vector
     import Vector_Test_Support
 
-enum `Vector Sequence Tests` {}
+    enum `Vector Sequence Tests` {}
 
-extension `Vector Sequence Tests` {
+    extension `Vector Sequence Tests` {
         @Suite
         struct `Vector × Sequence` {
 
@@ -56,6 +56,6 @@ extension `Vector Sequence Tests` {
                 try sequence.count(where: predicate)
             }
         }
-}
+    }
 
 #endif
