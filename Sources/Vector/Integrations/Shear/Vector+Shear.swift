@@ -7,6 +7,7 @@
             case nonfiniteCoordinate
         }
 
+        @inlinable
         public func applied(to vector: Vector<N, Scalar>) throws(ApplicationError) -> Vector<N, Scalar> {
             for index in 0..<N {
                 guard vector[index].isFinite else { throw .nonfiniteCoordinate }
